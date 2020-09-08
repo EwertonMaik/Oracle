@@ -14,6 +14,8 @@ SET ORACLE_HOME=%ORACLE_BASE%\11.1.0\db_1
 SET PATH=%ORACLE_HOME%\bin;%PATH%
 
 --Conectar em um banco via terminal / SQL Plus
+sqlplus /nolog -- Posso iniciar o SQL Plus sem conectar em Banco de Dados com Usuário e senha
+
 sqlplus / as sysdba
 
 connect sys / syys as sysdba
