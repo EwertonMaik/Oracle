@@ -31,9 +31,21 @@ lsnrctl status
 lsnrctl start
 lsnrctl stop
 
+emctl status dbconsole
+emctl start dbconsole
+
 tnsping (name)
 
---Comandos
+--Comandos START e STOP Banco
 
+SHUTDOWN -- Normal
+SHUTDOWN TRANSACTIONAL
+SHUTDOWN IMMEDIATE
+SHUTDOWN ABORT
 
---
+STARTUP --(Inicia Instância, Lê e monta arquivos do Banco de Dados e Abre para aceitar Conexões)
+STARTUP NOMOUNT --(Inicia Instaância sem montar o Banco de Dados)
+STARTUP MOUNT   --(Inicia Instância, Lê e monta arquivos do Banco de Dados)
+
+ALTER DATABASE MOUNT; -- Com a instancia já iniciada, Lê e monta arquivos do Banco de Dados.
+ALTER DATABASE OPEN;  -- Com a instância já iniciada, e arquivos do Banco de Dados lidos e montados, é aberto para conexões 
