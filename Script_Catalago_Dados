@@ -1,1 +1,35 @@
 -- Comandos Utilizados
+
+-- Conectar em uma instaância
+. oraenv
+XE
+
+--Verificar variável Oracle
+echo $ORACLE_SID
+echo $ORACLE_HOME
+echo $ORACLE_BASE
+
+--Conectar em um banco via terminal / SQL Plus
+sqlplus / as sysdba
+
+connect sys / syys as sysdba
+
+-- Consultar dados instnacia em V$instance
+select status, instance_name from V$instance;
+
+--Mostrar conexão
+SHOW CON_NAME;
+
+--Verificação Listener
+lsnrctl help
+services listener
+lsnrctl status
+lsnrctl start
+lsnrctl stop
+
+tnsping (name)
+
+--Comandos
+
+
+--
