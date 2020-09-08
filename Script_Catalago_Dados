@@ -21,7 +21,13 @@ sqlplus / as sysdba
 connect sys / syys as sysdba
 
 -- Consultar dados instnacia em V$instance
-select status, instance_name from V$instance;
+select status, instance_name, parallel from V$instance;
+
+--Consultar Informações Bases de Dados
+select protection_level, * from V$database;
+
+--Consultar informações de Streams
+select * from dba_streams_administrador;
 
 --Mostrar conexão
 SHOW CON_NAME;
