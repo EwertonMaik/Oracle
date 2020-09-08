@@ -9,6 +9,10 @@ echo $ORACLE_SID
 echo $ORACLE_HOME
 echo $ORACLE_BASE
 
+SET ORACLE_BASE=d:\app\oracle
+SET ORACLE_HOME=%ORACLE_BASE%\11.1.0\db_1
+SET PATH=%ORACLE_HOME%\bin;%PATH%
+
 --Conectar em um banco via terminal / SQL Plus
 sqlplus / as sysdba
 
