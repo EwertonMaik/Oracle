@@ -32,6 +32,9 @@ select * from dba_streams_administrador;
 --Listar Serviços do Banco
 select * from V$services;
 
+-- Listar DataFiles do banco
+select * from V$datafile
+
 --Mostrar conexão
 SHOW CON_NAME;
 SHOW CON_ID;
