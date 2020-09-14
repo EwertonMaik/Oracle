@@ -29,8 +29,18 @@ select protection_level, * from V$database;
 --Consultar informações de Streams
 select * from dba_streams_administrador;
 
+--Listar Serviços do Banco
+select * from V$services;
+
 --Mostrar conexão
 SHOW CON_NAME;
+SHOW CON_ID;
+SELECT SYS_CONTEXT('USERENV', 'CON_NAME') FROM   dual;
+SELECT SYS_CONTEXT('USERENV', 'CON_ID') FROM   dual;
+
+--Trocando entre Conteiner de banco de Dados
+ALTER SESSION SET CONTAINER=pdb1;
+ALTER SESSION SET CONTAINER=cdb$root;
 
 --Verificação Listener
 lsnrctl help
