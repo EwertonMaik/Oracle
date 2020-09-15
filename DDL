@@ -93,3 +93,34 @@ insert into TABELA_EXEMPLO2 (descricao) values ('Cadastro 01'); -- Registro inse
 insert into TABELA_EXEMPLO2 (id, descricao) values (2, 'Cadastro 01'); -- Registro inserido com ID 2, que foi passado manualmente
 insert into TABELA_EXEMPLO2 (id, descricao) values (NULL, 'Cadastro 03'); -- Registro inserido com ID 3, mesmo informaado null, foi gerado o ID da proxima sequencia.
 
+--Criado uma Procedure todos parâmetros IN por default quando não é especificado
+   CREATE OR REPLACE PROCEDURE proc_add_produto (p_nm_prod VARCHAR2, p_tp_prod NUMBER) AS
+   BEGIN
+        INSERT INTO PRODUTO (nm_prod, tp_prod) VALUES (p_nm_prod, p_tp_prod);
+   END;
+   
+   --Executado procedure e consultado a tabela
+   EXECUTE proc_add_produto('MILHO DE PIPOCA', 1);
+   SELECT * FROM PRODUTO;
+   
+   -- Procedure para Atualizar Descrição nome Produto
+   CREATE OR REPLACE PROCEDURE proc_update_produto (p_id_prod NUMBER, p_nm_prod VARCHAR2) AS
+   BEGIN
+        UPDATE PRODUTO SET nm_prod = p_nm_prod
+        WHERE
+        id_prod = p_id_prod;
+   END;
+   
+   -- Executando Procedure de Atualização
+   EXECUTE proc_update_produto (25, 'MILHO PIPOCA');
+   SELECT * FROM PRODUTO;
+   
+   -- Procedure para Excluir Cadastro de Produto
+  CREATE OR REPLACE PROCEDURE proc_delete_produto (p_id_prod NUMBER) AS
+   BEGIN
+        DELETE FROM PRODUTO WHERE id_prod = p_id_prod;
+   END;
+   
+   --Executando Procedure
+   EXECUTE proc_delete_produto (25);
+   SELECT * FROM PRODUTO; 
