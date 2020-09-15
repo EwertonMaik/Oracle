@@ -1,0 +1,19 @@
+--Scripts
+
+-- Criado tabela de Tipo de Produto
+-- Com ID_TP_PROD sendo number e sempre identity, não aceita null, e é criado automaticamente uma sequence que controla o autoincremento.
+-- A tabela possui um Index também IX_TIPO_PRODUTO para o campo ID_TP_PROD que é Primary Key
+--Todos Obejtos criados no esquema do usuário SYSTEM e tablespace SYSTEM;
+CREATE TABLE "SYSTEM"."TIPO_PRODUTO" (
+    "ID_TP_PROD" NUMBER GENERATED ALWAYS AS IDENTITY NOT NULL ENABLE,
+    "NM_TIPO" VARCHAR2(50) NOT NULL,
+    "DT_CAD" TIMESTAMP DEFAULT SYSDATE NOT NULL ENABLE,
+    CONSTRAINT "IX_TIPO_PRODUTO" PRIMARY KEY ("ID_TP_PROD")
+) TABLESPACE "SYSTEM";
+
+-- inderindo Dados na tabela, não sendo necessário passar valor para ID_TP_PROD, que é gerado automaticamente
+insert into TIPO_PRODUTO (nm_tipo) values ('ALIMENTICIO');
+insert into TIPO_PRODUTO (nm_tipo) values ('LIMPEZA');
+insert into TIPO_PRODUTO (nm_tipo) values ('UTENCILIOS DE COZINHA');
+select * from TIPO_PRODUTO;
+
