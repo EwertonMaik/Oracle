@@ -35,6 +35,10 @@ select * from V$services;
 -- Listar DataFiles do banco
 select * from V$datafile
 
+--Listar Informações dos usuários
+select * from dba_users;
+SELECT * FROM ALL_USERS;
+
 --Mostrar conexão
 SHOW CON_NAME;
 SHOW CON_ID;
