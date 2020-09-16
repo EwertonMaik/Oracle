@@ -144,7 +144,7 @@ create or replace PROCEDURE proc_consulta_total_Produtos (p_out_tot_prod OUT NUM
         dbms_output.put_line('Total de Produtos Cadastrados é : ' || p_out_tot_prod);
    END;
 
---Executando Procedure para testar parâmetro OUT
+--Executando Procedure dentro de um bloco para testar parâmetro OUT
 -- É atribuido o valor 5 só para teste, porém é retornado o valor total de produtos executado pela proc_consulta_total_Produtos
 DECLARE retorno NUMBER := 5;
    BEGIN
@@ -152,5 +152,39 @@ DECLARE retorno NUMBER := 5;
         dbms_output.put_line('Retorno é igual : ' || retorno);
    END;
    
-   --
-   
+   --Criado Função para Retornar o Total de Produtos
+   create or replace FUNCTION func_get_total_produtos
+   RETURN NUMBER 
+   IS total_prod NUMBER;
+   BEGIN 
+      SELECT COUNT(ID_PROD) INTO total_prod 
+      FROM PRODUTO;
+      RETURN(total_prod); 
+    END;
+    
+ -- Utilizando chamada da função via select
+ select 'TOTAL PROD: ', func_get_total_produtos from DUAL;
+ 
+ -- Função com 1 parametro de IN Entrada para poder buscar, contar e retornar a qts produtos existe para o código passado
+ -- E 1 parâmetro OUT que vai receber o nome/descrição do tipo informado
+ CREATE OR REPLACE FUNCTION func_get_total_prod_tipo (p_id_tp_prod IN NUMBER, p_nm_tipo OUT VARCHAR2)
+RETURN NUMBER IS
+    tot_prod_tip NUMBER;
+BEGIN
+    select count(id_prod) into tot_prod_tip from produto
+    inner join tipo_produto on (tp_prod = id_tp_prod)
+    where
+    id_tp_prod = p_id_tp_prod;
+    select nm_tipo into p_nm_tipo from tipo_produto where id_tp_prod = p_id_tp_prod;
+    return tot_prod_tip;
+END;
+
+--Testando a Função
+SET SERVEROUTPUT ON
+DECLARE
+    retorno_nome VARCHAR2(50);
+   BEGIN
+   DBMS_OUTPUT.PUT_LINE('Existe ' || func_get_total_prod_tipo(1, retorno_nome) || ' Produtos Cadastrados para o Tipo : ' || retorno_nome);
+   END;
+
+
