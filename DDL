@@ -103,6 +103,18 @@ insert into TABELA_EXEMPLO2 (id, descricao) values (NULL, 'Cadastro 03'); -- Reg
    EXECUTE proc_add_produto('MILHO DE PIPOCA', 1);
    SELECT * FROM PRODUTO;
    
+   -- Um segundo exemplo de procedure de cadastro de Produto, com um retorno do pakage dbms_output, listando no display o Resultado
+   CREATE OR REPLACE PROCEDURE proc_add_produto_com_retorno (p_nm_prod VARCHAR2, p_tp_prod NUMBER) AS
+   total_produtos NUMBER;
+   BEGIN
+        INSERT INTO PRODUTO (nm_prod, tp_prod) VALUES (p_nm_prod, p_tp_prod);
+        total_produtos := func_get_total_produtos;
+        dbms_output.put_line('Total de Produtos Cadastrados é : ' || total_produtos);
+   END;
+   
+   EXECUTE proc_add_produto_com_retorno ('TRIGO', 1);
+   SELECT * FROM PRODUTO;
+   
    -- Procedure para Atualizar Descrição nome Produto
    CREATE OR REPLACE PROCEDURE proc_update_produto (p_id_prod NUMBER, p_nm_prod VARCHAR2) AS
    BEGIN
@@ -124,3 +136,21 @@ insert into TABELA_EXEMPLO2 (id, descricao) values (NULL, 'Cadastro 03'); -- Reg
    --Executando Procedure
    EXECUTE proc_delete_produto (25);
    SELECT * FROM PRODUTO; 
+
+-- Criado uma procedure que retorno um parametro OUT
+create or replace PROCEDURE proc_consulta_total_Produtos (p_out_tot_prod OUT NUMBER) AS
+   BEGIN
+        SELECT COUNT(ID_PROD) INTO p_out_tot_prod FROM PRODUTO;
+        dbms_output.put_line('Total de Produtos Cadastrados é : ' || p_out_tot_prod);
+   END;
+
+--Executando Procedure para testar parâmetro OUT
+-- É atribuido o valor 5 só para teste, porém é retornado o valor total de produtos executado pela proc_consulta_total_Produtos
+DECLARE retorno NUMBER := 5;
+   BEGIN
+        proc_consulta_total_Produtos(retorno);
+        dbms_output.put_line('Retorno é igual : ' || retorno);
+   END;
+   
+   --
+   
