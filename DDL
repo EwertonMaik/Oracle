@@ -58,6 +58,10 @@ CREATE TABLE "SYSTEM"."PRODUTO" (
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
   BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "SYSTEM" ;
+  
+  --Criado um Inndex UNIQUE também para o campo NM_PROD, impedindo o cadastro de produtos iguais
+  --Se tirado o parametro UNIQUE, ele se torna não-exclusivo, podendo receber o cadastros iguais
+  CREATE UNIQUE INDEX IX_PRODUTO_NM_PROD ON PRODUTO (NM_PROD ASC);
 
 --Alterando o campo NM_PROD da tabela PRODUTO para não aceitar valores null
 ALTER TABLE PRODUTO MODIFY (NM_PROD NOT NULL);
@@ -187,4 +191,45 @@ DECLARE
    DBMS_OUTPUT.PUT_LINE('Existe ' || func_get_total_prod_tipo(1, retorno_nome) || ' Produtos Cadastrados para o Tipo : ' || retorno_nome);
    END;
 
+-- Criado Objeto VIEW
+CREATE OR REPLACE VIEW view_produtos AS
+select
+a.id_prod, a.nm_prod, a.dt_cad_prod, b.id_tp_prod, b.nm_tipo
+from produto a
+inner join tipo_produto b ON (a.tp_prod = b.id_tp_prod);
+
+-- Selecionando Visualização
+select * from view_produtos;
+
+-- Criado um VIEW MATERIALIZED com o parametro BUILD IMMEDIATE, Atualização Completa e conforme a tabela associada a visualização sofrer alteração e commit
+-- Ela é atualizada automaticamente
+CREATE MATERIALIZED VIEW view_produtos_IMMEDIATE
+BUILD IMMEDIATE
+REFRESH COMPLETE
+ON COMMIT
+AS
+select
+a.id_prod, a.nm_prod, a.dt_cad_prod, b.id_tp_prod, b.nm_tipo
+from produto a
+inner join tipo_produto b ON (a.tp_prod = b.id_tp_prod);
+
+--Adicionado um registro e aplicado commit e consultando a view materialized
+EXECUTE proc_add_produto('AÇUCAR', 1);
+COMMIT;
+select * from view_produtos_IMMEDIATE;
+
+--Criado view MATERIALIZED com parametro BUILD DEFERRED - atualizada manualmente na primeira requisição solicitada, REFRESH FORCE - uma atualização
+-- Rápida é executado, caso não uma completa é aplicada. DEMAND é iniciada manualmente ou por agendamento!
+CREATE MATERIALIZED VIEW view_produtos_DEFERRED
+BUILD DEFERRED
+REFRESH FORCE
+ON DEMAND
+AS
+select
+a.id_prod, a.nm_prod, a.dt_cad_prod, b.id_tp_prod, b.nm_tipo
+from produto a
+inner join tipo_produto b ON (a.tp_prod = b.id_tp_prod);
+
+-- Os dados irão aparecer na VIEW MATERIALIZED só após executar o REFRESH
+EXECUTE DBMS_MVIEW.REFRESH('view_produtos_DEFERRED');
 
