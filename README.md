@@ -42,3 +42,11 @@ OLAP - On-line Analytical Processing (Recomendado 8K, 16K, 32K). Melhor Desempen
 Tabelas, Índices, View, Procedures, Functios e demais objetos.
 
 4 - Extends (Tamanho ocupado pelos segmentos)
+
+# Estrutura Memória
+Oracle possui duas grandes estruturas de memória em sua INSTÂNCIA que gerencia e controla todo o acesso a estrutura Física e Lógica.
+
+1 - SGA - System Global Area - Compartilhada
+(Large Pool, Database Buffer Cache, Redolog Buffer, Java Pool, Shared Pool e outros.)
+
+2 - PGA - Program Global Area - Dedicada
