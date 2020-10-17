@@ -23,7 +23,7 @@
 3 - Redo Log Files (Contêm todos os registro de Log de transações do Banco de Dados)
 
 # Estrutura Lógica
-1 - Tablespace (Maior Agrupamento de Dados, um TableSpace é vinvulado a um ou mais arquivos de Dados .dbf)
+1 - Tablespace (Maior Agrupamento de Dados, um TableSpace é vinculado a um ou mais arquivos de Dados .dbf)
 
 2 - DataBlocks (Blocos no Disco)
 Compostos de (Header/Espaço/Dados) com tamanhos de 2K, 4K, 8K, 16K, 32K. Por padrão o tamanho é 8K e atende tanto ambientes OLTP e OLAP
