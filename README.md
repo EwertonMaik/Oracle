@@ -20,7 +20,7 @@
 
 2 - ControlFiles (Contém o controle e todas as informações de funcionamento do Banco de Dados, todo banco tem pelo menos 1 e no máximo 8 para redundância e multiplexação)
 
-3 - Redo Log Files (Contêm todos os registro de Log de transações do Banco de Dados)
+3 - Redo Log Files (Contêm todos os registro de Log de transações do Banco de Dados). Pode operar em Modo Archive e Noarchive.
 
 # Estrutura Lógica
 1 - Tablespace (Maior Agrupamento de Dados, um TableSpace é vinculado a um ou mais arquivos de Dados .dbf)
