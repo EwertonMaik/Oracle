@@ -22,6 +22,12 @@
 
 3 - Redo Log Files (Contêm todos os registro de Log de transações do Banco de Dados). Pode operar em Modo Archive e Noarchive.
 
+4 - Arquivos de Parãmetro (SPFILE - Arquivo Binário e permanente, precisa de reinicialização) e (PFILE - Arquivo de Texto e editável, não precisa de reinicialização).
+
+5 - Arquivos de monitoramento do Banco, chamados de TRACE ou .trc.
+
+6 - Arquivos de Alert Logs.
+
 # Estrutura Lógica
 1 - Tablespace (Maior Agrupamento de Dados, um TableSpace é vinculado a um ou mais arquivos de Dados .dbf)
 
