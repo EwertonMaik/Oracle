@@ -1,6 +1,6 @@
 -- Comandos Utilizados
 
--- Conectar em uma instaância
+-- Conectar em uma instância
 . oraenv
 XE
 
@@ -25,6 +25,13 @@ select status, instance_name, parallel from V$instance;
 
 --Consultar Informações Bases de Dados
 select protection_level, * from V$database;
+
+--Consultar em qual mode de Log o Banco esta
+select log_mode from v$database;
+
+--Consultar o destido do arquivo de Log
+archive log list;
+select dest_name, status, destination from v$archive_dest;  
 
 --Consultar informações de Streams
 select * from dba_streams_administrador;
@@ -62,7 +69,6 @@ emctl start dbconsole
 tnsping (name)
 
 --Comandos START e STOP Banco
-
 SHUTDOWN -- Normal
 SHUTDOWN TRANSACTIONAL
 SHUTDOWN IMMEDIATE
@@ -74,3 +80,10 @@ STARTUP MOUNT   --(Inicia Instância, Lê e monta arquivos do Banco de Dados)
 
 ALTER DATABASE MOUNT; -- Com a instancia já iniciada, Lê e monta arquivos do Banco de Dados.
 ALTER DATABASE OPEN;  -- Com a instância já iniciada, e arquivos do Banco de Dados lidos e montados, é aberto para conexões 
+
+--Alterar o modo de NOARCHIVELOG para ARCHIVELOG
+shut immediate; --Necessário desligar o Banco
+startup mount; -- E inicia-lo no modo monut
+alter database archivelog; -- Altera o modo de LOG
+alter database open; -- Abre o Banco de Dados para uso
+
