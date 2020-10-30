@@ -22,6 +22,9 @@ sqlplus / as sysdba -- Conectando com sysdba
 
 connect sys / sys as sysdba -- Conectando com sysdba
 
+--Conectando em outro Banco de Dados
+sqlplus usuario/senha@nomedobanco
+
 -- Consultar dados instnacia em V$instance
 select status, instance_name, parallel from V$instance;
 
@@ -44,11 +47,32 @@ select * from V$services;
 -- Listar DataFiles do banco
 select * from V$datafile
 
+--Verificar versão do Banco
+select banner from V$VERSION;
+
 --Listar Informações dos usuários
 select * from dba_users;
 SELECT * FROM ALL_USERS;
 
+--Verificando Tabelas do Usuário
+select table_name from USER_TABLES;
+
+--Verificar Privilégios dos Usuários
+select * from USER_SYS_PRIVS;
+
+--Lista ambiente 32 ou 64 bits
+select metadata from sys.kopm$;
+
+--Verificando a Estrutura de Memória
+select component, current_size, min_size, max_size from V$SGA_DYNAMIC_COMPONENTS;
+
+--Tabela Complementar Oracle - Dummy - para calcular expressões ou exibir texto
+select * from DUAL;
+select texto from DUAL;
+select 1 + 1 from DUAL;
+
 --Mostrar conexão
+SHOW USER;
 SHOW CON_NAME;
 SHOW CON_ID;
 SELECT SYS_CONTEXT('USERENV', 'CON_NAME') FROM   dual;
