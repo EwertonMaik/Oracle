@@ -29,7 +29,7 @@
 6 - Arquivos de Alert Logs.
 
 # Estrutura Lógica
-1 - Tablespace (Maior Agrupamento de Dados, um TableSpace é vinculado a um ou mais arquivos de Dados .dbf). As TableSpaces padrão são SYSTEM e SYSAUX, auxiliam na ADM. do Banco de Dados. TableSpace UNDO, na integridade das operações de COMMIT e ROLLBACK caso precise desfazer algo. E a TableSpace TEMP, que auxilia a memória do Oracle em no processamento de operações.
+1 - Tablespace (Maior Agrupamento de Dados, um TableSpace é vinculado a um ou mais arquivos de Dados .dbf). As TableSpaces padrão são SYSTEM e SYSAUX, auxiliam na ADM. do Banco de Dados. TableSpace UNDO, na integridade das operações de COMMIT e ROLLBACK caso precise desfazer algo. E a TableSpace TEMP, que auxilia a memória do Oracle em no processamento de operações. Todo Objeto é criado por padrão na TableSpace USERS exceto quando se esta logado com o usuário SYSTEM, onde o objeto será criado na TableSpace SYSTEM.
 
 2 - DataBlocks (Blocos no Disco)
 Compostos de (Header/Espaço/Dados) com tamanhos de 2K, 4K, 8K, 16K, 32K. Por padrão o tamanho é 8K e atende tanto ambientes OLTP e OLAP
