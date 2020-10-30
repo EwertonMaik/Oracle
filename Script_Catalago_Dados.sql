@@ -80,6 +80,15 @@ select * from DUAL;
 select texto from DUAL;
 select 1 + 1 from DUAL;
 
+--Pseudo Colunas Oracle
+ROWNUM - O número é atribuido de acordo com a ordem em que as linhas são retiradas da tabela. Esta ordem é definida antes do ORDER BY. Usado na paginação do registros.
+ROWID  - É o registro único que o oracle atribui para identificar cada linha da tabela, por isto os índices guardam o rowid associado a cada linha.
+USER   - Exibe o nome do usuário da sessão que esta conectada.
+UID    - Número que o Banco de Dados atribuiu ao usuário.
+
+select user, uid from dual;
+select rowid, rownum, * from emp;
+
 --Mostrar conexão
 SHOW USER;
 SHOW CON_NAME;
