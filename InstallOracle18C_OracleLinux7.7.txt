@@ -1,0 +1,57 @@
+Sistema Operacional - Oracle Linux 7.7
+Banco de Dados - Oracle 18C XE
+
+
+####  Instalação do Oracle Database 18c Express ####
+
+--Visualizando arquivo de Hosts
+
+cat /etc/hosts
+cat /etc/*-release -- verificar versão do SO
+
+# Passo 1: Editando arquivo de Hosts e adicionando IP e Hostname
+
+vim /etc/hosts
+
+192.168.15.15 vm-oracle-linux vm-oracle-linux.localdomain
+
+# Passo 2: Realizando o Pré-Intall do Oracle Database
+
+sudo -s
+yum install -y oracle-database-preinstall-18c
+
+--Verificar se o usuário oracle foi criado
+id oracle
+
+# Passo 3: Instalar o RPM do Oracle Database 18c XE
+
+cd "local do arquivo"
+yum -y localinstall oracle-database-xe-18c-1.0-1.x86_64.rpm
+
+
+# Passo 4: Configurar o Banco de Dados Oracle, após a instalação
+
+/etc/init.d/oracle-xe-18c configure
+
+Password = *****
+
+**********************
+Global Database Name:XE
+System Identifier(SID):XE
+Connect to Oracle Database using one of the connect strings:
+Pluggable database: vm-oracle-linux.localdomain:1539/XEPDB1
+Multitenant container database: vm-oracle-linux.localdomain:1539
+Use https://localhost:5500/em to access Oracle Enterprise Manager for Oracle Database XE
+**********************
+
+# Passo 5: Conectar no Banco de Dados Oracle
+
+su – oracle
+
+. oraenv
+
+ORACLE_SID = [XE] ? XE
+
+--Realizando conexão via SQL Plus
+sqlplus / as sysdba
+$ sqlplus [user]/[password]@//[hostname]:[port]/[DB name] [AS [role]]
