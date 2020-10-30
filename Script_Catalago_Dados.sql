@@ -60,6 +60,9 @@ select table_name from USER_TABLES;
 --Verificar Privilégios dos Usuários
 select * from USER_SYS_PRIVS;
 
+--Verificando os Segmentos dos Objetos do Banco
+select segment_name, segment_type, tablespace_name, bytes, blocks, extents from USER_SEGMENTS;
+
 --Lista ambiente 32 ou 64 bits
 select metadata from sys.kopm$;
 
