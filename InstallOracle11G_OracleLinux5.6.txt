@@ -1,0 +1,216 @@
+﻿Sistema Operacional - Oracle Linux 5.6
+Banco de Dados - Oracle Database 11G (11.2.0.3.0)
+VM Virtual Box
+MobaXterm - Ferramenta para conectar via SSH e transferir aquivos via FTP
+Xming - Ferramenta instalada em minha maquina local para carregar a interface do Linux no ambiente Windows
+
+** Conectando via ssh no Oracle Linux atraves do MobaXterm
+
+ssh root@192.168.56.101
+
+** Definindo o IP fixo do Servidor editando o arquivo hosts
+
+vi /etc/hosts
+
+#CONFIGURACAO REFERENTE AO ORACLE
+192.168.15.10  vm-oracle-linux.localdomain  localhost
+#FIM DA CONFIGURACAO DO ORACLE
+
+(:wq) Para sair e salvar o arquivo  que foi aberto pelo VIM
+
+** CONFIGURANDO O KERNEL
+
+vi /etc/sysctl.conf
+
+#CONFIGURACAO REFERENTE AO ORACLE
+fs.suid_dumpable = 1
+fs.aio-max-nr = 1048576
+fs.file-max = 6815744
+kernel.shmall = 2097152
+kernel.shmmax = 536870912
+kernel.shmmni = 4096
+kernel.sem = 250 32000 100 128
+net.ipv4.ip_local_port_range = 9000 65500
+net.core.rmem_default = 262144
+net.core.rmem_max = 4194304
+net.core.wmem_default = 262144
+net.core.wmem_max = 1048586
+#FIM DA CONFIGURACAO DO ORACLE
+
+** CONFIRMANDO E ATUALIZANDO O KERNEL
+/sbin/sysctl –p /etc/sysctl.conf
+
+** VERIFICANDO AS CONFIGURACOES DO KERNEL
+/sbin/sysctl -a
+
+** CONFIGURANDO ARQUIVO DE LIMITES
+vi /etc/security/limits.conf
+
+#CONFIGURACAO REFERENTE AO ORACLE
+oracle              soft    nproc   2047
+oracle              hard    nproc   16384
+oracle              soft    nofile  4096
+oracle              hard    nofile  65536
+oracle              soft    stack   10240
+#FIM DA CONFIGURACAO DO ORACLE
+
+** CONFIGURANDOO DIRETORIO DE LOGIN
+
+vi /etc/pam.d/login
+
+#CONFIGURACAO REFERENTE AO ORACLE
+session    required     /lib/security/pam_limits.so
+#FIM DA CONFIGURACAO DO ORACLE
+
+** DESABILITANDO MÓDULO DE SEGURANCA
+
+vi /etc/selinux/config 
+
+SELINUX=disabled
+
+** INSTALANDO PACOTES ADICIONAIS
+
+MONTAR A IMAGEM DO LINUX NA MAQUINA VIRTUAL PELO VIRTUAL BOX
+
+cd /media/OL-8-0-0-BaseOS-x86_64/Server/ (Caminho dentro do Oracle Linux 5.6)
+
+cd /run/media/root/OL-8-0-0-BaseOS-x86_64/Server/ (Caminho dentro do Oracle Linux - versões superiores)
+
+ls -lart
+
+INSTALAR CADA PACOTE LISTADO ABAIXO
+
+rpm -Uvh binutils-2.*
+rpm -Uvh compat-libstdc++-33*
+rpm -Uvh compat-libstdc++-33*.i386.rpm
+rpm -Uvh elfutils-libelf*
+rpm -Uvh gcc-4.*
+rpm -Uvh gcc-c++-4.*
+rpm -Uvh glibc-2.*
+rpm -Uvh glibc-common-2.*
+rpm -Uvh glibc-devel-2.*
+rpm -Uvh glibc-headers-2.*
+rpm -Uvh ksh*
+rpm -Uvh libaio-0.*
+rpm -Uvh libaio-devel-0.*
+rpm -Uvh libgomp-4.*
+rpm -Uvh libgcc-4.*
+rpm -Uvh libstdc++-4.*
+rpm -Uvh libstdc++-devel-4.*
+rpm -Uvh make-3.*
+rpm -Uvh sysstat-7.*
+rpm -Uvh unixODBC-2.*
+rpm -Uvh unixODBC-devel-2.*
+rpm -Uvh numactl-devel-*
+
+** CRIANDO OS GRUPOS DE USUARIOS UTILIZADOS PELO ORACLE
+
+groupadd oinstall
+groupadd dba
+groupadd oper
+
+** ADICIONANDO USUARIO ORACLE AO GRUPO
+
+useradd -g oinstall -G dba oracle
+
+** DEFININDO SENHA DE ACESSO
+
+passwd oracle
+
+** CRIANDO OS DIRETORIOS DE INSTALACAO DO ORACLE
+
+mkdir -p /u01/app/oracle/product/11.2.0/db_home1
+chown -R oracle.oinstall /u01
+
+** Definindo LOCALHOST para o X, Permitindo Interface Grafica via MobaXterm
+
+xhost  +localhost
+
+** DESLIGANDO A MAQUINA E CONFIGURANDO A VM DO SO PARA INIKCIAR O BOOT NOMALMENTE E NÃO MAIS PELA IMAGEM DE CD
+
+shutdown -h 0
+
+** CONECTANDO AO SO ORACLE LINUX VIA MOBAXTERM NOVAMENTE
+
+ssh oracle@192.168.15.10
+
+16 - VERIFICAR OS ARQUIVOS DENTRO DO DIRETORIO HOME DO ORACLE (USUARIO)
+
+ls -lart
+
+** EDITAR O ARQUIVO .bash_profile - - VARIAVEIS DE AMBIEMTE
+
+vi .bash_profile
+
+# CONFIGURACOES DO ORACLE
+TMP=/tmp; export TMP
+TMPDIR=$TMP; export TMPDIR
+
+ORACLE_HOSTNAME=localhost; export ORACLE_HOSTNAME
+ORACLE_UNQNAME=orcl; export ORACLE_UNQNAME
+ORACLE_BASE=/u01/app/oracle; export ORACLE_BASE
+ORACLE_HOME=$ORACLE_BASE/product/11.2.0/db_home1; export ORACLE_HOME
+ORACLE_SID=orcl; export ORACLE_SID
+PATH=/usr/sbin:$PATH; export PATH
+PATH=$ORACLE_HOME/bin:$PATH; export PATH
+
+LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib; export LD_LIBRARY_PATH
+CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib; export CLASSPATH
+# FIM DAS CONFIGURACOES DO ORACLE
+
+** CARREGANDO O BASH
+
+. .bash_profile
+
+** VERIFICANDO AS VARIÁVEIS CONFIGURADAS
+
+echo $ORACLE_HOME
+echo $ORACLE_BASE
+
+** DESLIGANDO A MAQUINA NOVAMENTE
+
+shutdown -h 0
+
+** COPIAR O INSTALADOR DO ORACLE PARA UMA PASTA DENTRO DO SO USANDO O MOBAXTERM
+
+cd u01/ (PASTA u01 criada na raiz e copiado o arquivo de instalação)
+
+ls -lart
+
+** DESCOMPACTANDO OS ARQUIVOS 3 ARQUIVOS
+
+unzip [nome do arquivo]
+
+** ACESSAR A PASTA QUE OS AQUIVOS FORAM DESCOMPACTADOS
+
+cd database/
+
+** TRAZER A INTERFACE PARA O WINDOWS
+
+export DISPLAY=192.168.56.1:0.0; // Ip do Adaptador Virtual do Virtual BOX
+
+** VERIFICANDO
+
+echo $DISPLAY
+
+** TESTAR COM O DISPLAY DO RELOGIO
+
+xclock
+
+** IR NA PASTA DO INSTALADOR
+
+cd /u01/database
+
+** Executar o Instalador do Oracle Database
+
+./runInstaller
+
+** APÓS CONCLUSÃO DA INSTALAÇÃO
+
+https://192.168.56.102:1158/em
+
+lsnrctl start (INICIANDO LISTENER)
+
+sqlplus / as sysdba
+
+emctl start dbconsole
