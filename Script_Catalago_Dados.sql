@@ -69,6 +69,11 @@ select metadata from sys.kopm$;
 --Verificando a Estrutura de Memória
 select component, current_size, min_size, max_size from V$SGA_DYNAMIC_COMPONENTS;
 
+-- Exemplo para formatar o tamanho das colunas dentro do sqlplus
+column tablespace_name format A10;
+column segment_name format A10;
+column segment_type format A10;
+
 --Tabela Complementar Oracle - Dummy - para calcular expressões ou exibir texto
 select * from DUAL;
 select texto from DUAL;
