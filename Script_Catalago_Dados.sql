@@ -16,9 +16,11 @@ SET PATH=%ORACLE_HOME%\bin;%PATH%
 --Conectar em um banco via terminal / SQL Plus
 sqlplus /nolog -- Posso iniciar o SQL Plus sem conectar em Banco de Dados com Usuário e senha
 
-sqlplus / as sysdba
+sqlplus system/oracle -- Conectando com usuário system e senha oracle
 
-connect sys / syys as sysdba
+sqlplus / as sysdba -- Conectando com sysdba
+
+connect sys / sys as sysdba -- Conectando com sysdba
 
 -- Consultar dados instnacia em V$instance
 select status, instance_name, parallel from V$instance;
