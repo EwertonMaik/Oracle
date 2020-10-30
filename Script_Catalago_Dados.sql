@@ -75,6 +75,12 @@ column tablespace_name format A10;
 column segment_name format A10;
 column segment_type format A10;
 
+--Lista de Erros que ocorreram
+SHOW ERROS;
+
+--Lista de Triggers
+select trigger_name, trigger_body from USER_TRIGGERS;
+
 --Tabela Complementar Oracle - Dummy - para calcular expressões ou exibir texto
 select * from DUAL;
 select texto from DUAL;
