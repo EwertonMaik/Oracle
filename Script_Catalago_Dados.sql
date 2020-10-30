@@ -44,8 +44,9 @@ select * from dba_streams_administrador;
 --Listar Serviços do Banco
 select * from V$services;
 
--- Listar DataFiles do banco
+-- Listar DataFiles do Banco
 select * from V$datafile
+select tablespace_name, file_name from DBA_DATA_FILES;
 
 --Verificar versão do Banco
 select banner from V$VERSION;
