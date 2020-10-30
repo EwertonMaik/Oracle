@@ -3,6 +3,7 @@ Banco de Dados - Oracle Database 11G (11.2.0.3.0)
 VM Virtual Box
 MobaXterm - Ferramenta para conectar via SSH e transferir aquivos via FTP
 Xming - Ferramenta instalada em minha maquina local para carregar a interface do Linux no ambiente Windows
+Editor de arquivos - VIM
 
 ** Conectando via ssh no Oracle Linux atraves do MobaXterm
 
@@ -205,12 +206,35 @@ cd /u01/database
 
 ./runInstaller
 
-** APÓS CONCLUSÃO DA INSTALAÇÃO
+** COMANDO PARA CRIAR O BANCO DE DADOS DBCA - DATABASE CONFIGURATION ASSISTANT
 
-https://192.168.56.102:1158/em
+dbca
 
-lsnrctl start (INICIANDO LISTENER)
+** COMANDO PARA CONFIGURAR LISTENER - ORACLE NET CONFIGURATION ASSISTANT
+
+netca
+
+** COMANDO PARA VERIFICAR O PROCESSOS ORACLE
+
+ps -ef | grep smon
+ps -ef | grep pmon
+
+** COMANDO PARA INICIAR E MONTAR O BANCO DE DADOS (open e mounted)
+
+startup
+
+** INICIANDO LISTINER - OUVINDO DO BANCO
+
+lsnrctl start
+
+** CONECTANDO NA INSTÂNCIA PELO USUÁRIO DE GRUPO QUE ESTA LOGADO
 
 sqlplus / as sysdba
 
+** COMANDO PARA INICIAR O ENTERPRISE MANAGER E PODER ACESSO-LO VIA WEB - https://192.168.56.102:1158/em
+
 emctl start dbconsole
+
+** LISTA O DICIONÁRIO DE DADOS DO ORACLE
+
+select * from dict;
