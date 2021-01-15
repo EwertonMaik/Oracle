@@ -17,6 +17,8 @@
 
 5 - Oracle Net Manager - Ferramenta desktop instalada com o Banco Oracle, utilizada para criar e configurar Listeners (listener.ora), Perfil (sqlnet.ora), Nomeação de Serviço (tnsnames.ora) localizados no diretório - ORACLE_HOME/network/admin
 
+6 - Assistente de Configuração do Oracle Net - Outra ferramenta auxiliar desktop instalada junto ao Oracle, utilizada para configurar o Listener, Métodos de Nomeação, Nome de Serviço de Rede Local e Uso de Diretórios.
+
 # Estrutura Física
 1 - .dbf DataFiles (Estruturas físicas de armazenamento do Banco de Dados, é vinculado a um Tablespace)
 
