@@ -56,3 +56,6 @@ Oracle possui duas grandes estruturas de memória em sua INSTÂNCIA que gerencia
 (Large Pool, Database Buffer Cache, Redolog Buffer, Java Pool, Shared Pool e outros.)
 
 2 - PGA - Program Global Area - Dedicada
+
+# Heterogeneous Services
+O Banco de Dados Oracle pode se conectar a outros SGBD's utilizando Heterogeneous Services, complemento de instalação do Oracle chamado "Oracle Database Gateway", onde pode-se escolher os drives para se conectar a um ODBC, ou a um Banco SQL Server, Informix, Sybase, TeraData dentre outros.
