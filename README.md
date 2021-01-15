@@ -19,6 +19,8 @@
 
 6 - Assistente de Configuração do Oracle Net - Outra ferramenta auxiliar desktop instalada junto ao Oracle, utilizada para configurar o Listener, Métodos de Nomeação, Nome de Serviço de Rede Local e Uso de Diretórios.
 
+7 - Oracle Database Gatawey ODBC - Ferramenta que pode ser instalada junto com o Banco de Dados, utilizada para conectar o Banco Oracle através de um ODBC - Open Database Connectivity a outro Sistemas Gerenciadores de Bancos de Dados (SGBD) Oracle ou Não-Oracle. Seus arquivos de configuração estão localizado em ORACLE_HOME\hs\admin
+
 # Estrutura Física
 1 - .dbf DataFiles (Estruturas físicas de armazenamento do Banco de Dados, é vinculado a um Tablespace)
 
