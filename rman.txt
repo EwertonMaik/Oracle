@@ -43,3 +43,23 @@ alter database open resetlogs;
 select name from v$database;
 
 select tablespace_name from dba_tablespaces;
+
+archive log list;
+
+alter database archivelog;
+
+select file_name from from dba_data_files;
+
+connect target sys@orcl
+
+backup tablespace tbs01;
+
+show parameter db_recover
+
+alter system set db_recovery_file_dest='m:\backup\';
+
+backup datafile 16;
+
+select * from v$controlfile;
+
+backup current controlfile;
