@@ -1,0 +1,45 @@
+-- RMAN - Recovary Manager
+
+OS comandos abaixo são executados pelo CMD - Windows
+O rman.exe pode ser iniciado pelo diretório de instalação ou chamado diretamente caso o caminho fora adicionado na variável de ambiente.
+C:\oracle\app\product\11.1.0\db_1\bin
+
+--Definindo o nome de qual é o ORACLE_SID que será acessado
+set ORACLE_SID=finance
+
+--Visualizando o valor da variável
+echo %ORACLE_SID%
+
+-- Conectando com RMAN
+rman target /
+
+-- Comando para realizar backup completo
+backup database;
+
+-- Comando para listar
+list backup;
+
+-- Comando para excluir backup
+delete backup;
+
+-- Comando para realizar backup com arquivo de log
+backup database plus archivelog;
+
+-- Comando pode ser executado dento do RMAN> também
+startup nomount;
+
+-- Comando para restaurar arquivos de controlfile
+restore controlfile from 'nome_arquivo';
+
+-- Comando para alterar banco de dados para montado
+alter database mount;
+
+restore database;
+
+recover database;
+
+alter database open resetlogs;
+
+select name from v$database;
+
+select tablespace_name from dba_tablespaces;
