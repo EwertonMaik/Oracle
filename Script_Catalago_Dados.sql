@@ -1,5 +1,8 @@
 -- Comandos Utilizados
 
+--Desistalação Produtos
+%ORACLE_HOME%deinstall\deinstall.bat -silent
+
 -- Conectar em uma instância
 . oraenv
 XE
