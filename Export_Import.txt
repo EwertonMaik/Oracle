@@ -1,0 +1,29 @@
+-- Conhecer opções de Export
+$ exp help=y
+
+-- Fazer Export Nivel Banco de Dados
+$ exp file=/u01/fullbkp_prod.dmp log=/u01/fullbkp_prod.log full=y
+
+-- Fazer Export Nível Schema
+$ exp file=/u01/scott_bkp.dmp log=/u01/scott_bkp.log owner='SCOTT'
+
+-- Fazer Export Nível de Tabela
+$ exp file=/u01/emp_bkp.dmp log=/u01/emp_bkp.log tables='SCOTT.EMP', 'SCOTT.DEP'
+
+-- Fazer Export Nível de Linha
+$ exp file=/u01/emp_rows_bkp.dmp log=/u01/emp_rows.log tables='SCOTT.EMP' query=\"where deptno=10\"
+
+-- Conhecer opções de import
+$ imp help=y
+
+-- Fazer Import Full Banco de Dados
+$ imp file=/u01/fullprd.dmp log=/u01/imp_fullprod.log full=y
+
+-- Fazer Import de Schema
+$ imp file=/u01/scott_bkp.dmp log=/u01/imp_schema.log fromuser='SCOTT' touser='SCOTT'
+
+-- Fazer Import de Table
+$ imp file=/u01/emp_bkp.dmp log=/u01/imp_emp.log fromuser='SCOTT' touser='SCOTT' tables='EMP'
+
+-- Fazer Import de uma tabela para outro usuário
+$ imp file=/u01/emp_bkp.dmp log=/u01/imp_emp.log fromuser='SCOTT' touser='SYSTEM' tables='EMP'
