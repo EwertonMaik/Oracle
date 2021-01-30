@@ -1,0 +1,13 @@
+-- Criando uma Tablespace
+CREATE TABLESPACE TBS_PAULO_PRD
+DATAFILE 'D:\app\Ewerton\oradata\orcl\prd\TBS_PAULO_PRD.dbf'
+SIZE 100 M AUTOEXTEND ON NEXT 20 M
+MAXSIZE UNLIMITED;
+
+-- Criando um Usuário e Definindo a tablespace padrão TBS_PAULO_PRD
+CREATE USER paulo IDENTIFIED BY 123456789
+DEFAULT TABLESPACE TBS_PAULO_PRD
+TEMPORARY TABLESPACE temp;
+
+-- Alterando senha do Usuário
+ALTER USER paulo identified by 0123456789;
