@@ -4,10 +4,27 @@ DATAFILE 'D:\app\Ewerton\oradata\orcl\prd\TBS_PAULO_PRD.dbf'
 SIZE 100 M AUTOEXTEND ON NEXT 20 M
 MAXSIZE UNLIMITED;
 
+CREATE TABLESPACE TBS_PEDRO_HML
+DATAFILE 'D:\app\Ewerton\oradata\orcl\prd\TBS_PEDRO_HML.dbf'
+SIZE 100 M AUTOEXTEND ON NEXT 20 M
+MAXSIZE UNLIMITED;
+
+-- Visualizando as tablespaces criadas e seu caminho onde foi criada
+select tablespace_name, file_name from DBA_DATA_FILES;
+
 -- Criando um Usuário e Definindo a tablespace padrão TBS_PAULO_PRD
 CREATE USER paulo IDENTIFIED BY 123456789
 DEFAULT TABLESPACE TBS_PAULO_PRD
 TEMPORARY TABLESPACE temp;
 
+CREATE USER pedro IDENTIFIED BY 123456789
+DEFAULT TABLESPACE TBS_PEDRO_HML
+TEMPORARY TABLESPACE temp;
+
+-- Verificando qual a Tablespace do usuário criado
+SELECT username, default_tablespace, temporary_tablespace FROM dba_users WHERE username = 'PAULO';
+SELECT username, default_tablespace, temporary_tablespace FROM dba_users WHERE username = 'PEDRO';
+
 -- Alterando senha do Usuário
 ALTER USER paulo identified by 0123456789;
+ALTER USER pedro identified by 0123456789;
