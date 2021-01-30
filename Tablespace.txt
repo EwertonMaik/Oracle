@@ -28,3 +28,17 @@ SELECT username, default_tablespace, temporary_tablespace FROM dba_users WHERE u
 -- Alterando senha do Usuário
 ALTER USER paulo identified by 0123456789;
 ALTER USER pedro identified by 0123456789;
+
+-- Comando para Bloquear e Desbloquear usuário
+ALTER USER paulo account lock;
+ALTER USER paulo identified by 123456789 account unlock;
+
+-- Excluíndo Usuário
+DROP USER paulo;
+
+-- Liberando acesso para o usuário pode Logar e realizar operações de Criar Tabela, Views...
+GRANT create session, create table, create view TO paulo;
+GRANT create session, create table, create view TO pedro;
+
+-- Quando utilizado o parâmetro WITH ADMIN OPTION, o usuário pode conceder este acesso para outros usuários.
+GRANT create session,create table,create view TO paulo WITH ADMIN OPTION;
