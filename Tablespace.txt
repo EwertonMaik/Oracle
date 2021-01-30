@@ -36,9 +36,17 @@ ALTER USER paulo identified by 123456789 account unlock;
 -- Excluíndo Usuário
 DROP USER paulo;
 
+-- Privilégios de Sistemas
 -- Liberando acesso para o usuário pode Logar e realizar operações de Criar Tabela, Views...
 GRANT create session, create table, create view TO paulo;
 GRANT create session, create table, create view TO pedro;
 
 -- Quando utilizado o parâmetro WITH ADMIN OPTION, o usuário pode conceder este acesso para outros usuários.
 GRANT create session,create table,create view TO paulo WITH ADMIN OPTION;
+
+-- Privilégio de Objetos
+-- Concedendo acesso ao usuário paulo para arealizar select, update e delete na tabela employees do usuário/esquema - HR
+GRANT select, update, delete ON HR.employees TO paulo;
+
+-- Privilégio que permite ao usuário conceder a permissão para outros usuários
+GRANT select, update, delete ON HR.employees TO paulo WITH GRANT OPTION;
