@@ -46,7 +46,14 @@ GRANT create session,create table,create view TO paulo WITH ADMIN OPTION;
 
 -- Privilégio de Objetos
 -- Concedendo acesso ao usuário paulo para arealizar select, update e delete na tabela employees do usuário/esquema - HR
-GRANT select, update, delete ON HR.employees TO paulo;
+GRANT insert, select, update, delete ON HR.employees TO paulo;
 
 -- Privilégio que permite ao usuário conceder a permissão para outros usuários
-GRANT select, update, delete ON HR.employees TO paulo WITH GRANT OPTION;
+GRANT insert, select, update, delete ON HR.employees TO paulo WITH GRANT OPTION;
+
+-- Removendo privilégios de SISTEMA
+REVOKE create view FROM paulo;
+
+-- Removendo privilégios de OBJETOS
+REVOKE insert ON HR.employees FROM paulo;
+
