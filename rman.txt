@@ -16,15 +16,23 @@ rman target /
 
 -- Comando para realizar backup completo
 backup database;
+backup as backupset database;
+
+-- Realizar Backup de uma Tablespace - Só é possivél se o modo do banco de dados for archivelog
+backup as backupset tablespace TBS_PAULO_PRD;
+backup as backupset tag 'BK_TBS_PAULO_PRD_31_01_2021' tablespace TBS_PAULO_PRD; -- Passado um Tag para o nome do Backup
 
 -- Comando para listar
 list backup;
+list backup summary;
 
 -- Comando para excluir backup
 delete backup;
 
 -- Comando para realizar backup com arquivo de log
 backup database plus archivelog;
+backup as backupset database plus archivelog;
+
 
 -- Comando pode ser executado dento do RMAN> também
 startup nomount;
