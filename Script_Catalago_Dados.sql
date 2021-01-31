@@ -135,8 +135,11 @@ ALTER DATABASE MOUNT; -- Com a instancia já iniciada, Lê e monta arquivos do B
 ALTER DATABASE OPEN;  -- Com a instância já iniciada, e arquivos do Banco de Dados lidos e montados, é aberto para conexões 
 
 --Alterar o modo de NOARCHIVELOG para ARCHIVELOG
-shut immediate; --Necessário desligar o Banco
+archive log list; -- Verificar como esta o modo de LOG
+select log_mode from v$database; -- Verificar modo de LOG
+shutdown immediate; --Necessário desligar o Banco
 startup mount; -- E inicia-lo no modo monut
+select status from v$instance; -- Verificando Status da Instância
 alter database archivelog; -- Altera o modo de LOG
 alter database open; -- Abre o Banco de Dados para uso
 
