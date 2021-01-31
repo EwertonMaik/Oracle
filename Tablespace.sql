@@ -102,3 +102,5 @@ REVOKE create view FROM paulo;
 -- Removendo privilégios de OBJETOS
 REVOKE insert ON HR.employees FROM paulo;
 
+-- Verificando as tabelas e privilégios que o usuário possui
+select * from SYS.user_tab_privs;
