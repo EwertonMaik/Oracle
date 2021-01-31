@@ -85,6 +85,10 @@ DROP USER paulo;
 -- Liberando acesso para o usuário pode Logar e realizar operações de Criar Tabela, Views...
 GRANT create session, create table, create view TO paulo;
 GRANT create session, create table, create view TO pedro;
+GRANT RESOURCE, DBA TO paulo;
+GRANT CONNECT, RESOURCE to paulo;
+GRANT ANY PRIVILEGE TO paulo;
+GRANT UNLIMITED TABLESPACE TO paulo;
 
 -- Quando utilizado o parâmetro WITH ADMIN OPTION, o usuário pode conceder este acesso para outros usuários.
 GRANT create session,create table,create view TO paulo WITH ADMIN OPTION;
