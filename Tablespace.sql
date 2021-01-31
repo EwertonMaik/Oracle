@@ -1,3 +1,6 @@
+-- Renomear Tablespaces
+ALTER TABLESPACE recursos_humanos RENAME TO recursos;
+
 --SINTAXE PARA CRIAÇÃO DE UMA TABLESPACE E ARQUIVOS DE DADOS
 CREATE TABLESPACE recursos_humanos
 DATAFILE 'C:/data/rh_01.dbf'
