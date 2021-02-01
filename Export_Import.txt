@@ -50,3 +50,19 @@ exit
 
 -- comando export
 expdp hr/hr@ORCL directory = exp_tblsp dumpfile = tablespace.dmp logfile = tblsp_log.log tablespaces = users, example;
+
+
+--###############
+--IMPORT
+conn sys/sys as sysdba
+
+impdp remap_schema='scott':'tim' remap_tablespace='users':'sysaux' nologfile=y dumpfile=scott.dmp directory=data
+
+Username : system/sys
+
+-- Redefinindo senha do usuário após importado
+alter user tim identifield by tim account unlock;
+
+conn tim/tim
+
+select * from tab;
