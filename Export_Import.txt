@@ -27,3 +27,26 @@ $ imp file=/u01/emp_bkp.dmp log=/u01/imp_emp.log fromuser='SCOTT' touser='SCOTT'
 
 -- Fazer Import de uma tabela para outro usuário
 $ imp file=/u01/emp_bkp.dmp log=/u01/imp_emp.log fromuser='SCOTT' touser='SYSTEM' tables='EMP'
+
+
+-- Export Tablespace
+--acessando pelo cmd
+sqlplus / as sysdba
+
+--Verificando as tablespaces
+select name from v$tablespace;
+
+-- Criar meu diretório no Windows
+D:\Data_Pump\Tablespace_Export
+
+-- Criar diretório no plsql
+create directory exp_tblsp as 'D:\Data_Pump\Tablespace_Export';
+
+--Aplicar permissão de acesso ao diretório para o usuário
+grant read, write on directory exp_tblsp to hr;
+
+-- Sair do plsql e permanecer no cmd
+exit
+
+-- comando export
+expdp hr/hr@ORCL directory = exp_tblsp dumpfile = tablespace.dmp logfile = tblsp_log.log tablespaces = users, example;
