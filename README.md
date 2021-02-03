@@ -59,3 +59,16 @@ Oracle possui duas grandes estruturas de memória em sua INSTÂNCIA que gerencia
 
 # Heterogeneous Services
 O Banco de Dados Oracle pode se conectar a outros SGBD's utilizando Heterogeneous Services, complemento de instalação do Oracle chamado "Oracle Database Gateway", onde pode-se escolher os drives para se conectar a um ODBC, ou a um Banco SQL Server, Informix, Sybase, TeraData dentre outros.
+
+# Utilitários %ORACLE_HOME%/BIN
+1 - RMAN - Recovery Manager, é o gerenciador de Backup do Oracle. Gerenciador de Backup e Recuperação.
+
+2 - DBCA - Database Configuration Assistent - Assistente de Configuração de Banco de Dados
+
+3 - LSNRCTL - Listener Control Utility - Utilitário de Controle do Listener (Status, Start, Stop)
+
+4 - SQLPLUS - Utilitário de linha de comando para executar instruções SQL e PL/SQL no banco de dados.
+
+5 - EXPDP - Data Pump Export - Utilitário para Exportar Dados do Banco de Dados, Nível Full BD, Schemas ou Tabelas.
+
+6 - IMPDP - Data Pump Import - Utilitário para Importar Dados para o Banco.
