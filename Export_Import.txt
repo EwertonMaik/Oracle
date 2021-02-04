@@ -39,6 +39,9 @@ select name from v$tablespace;
 -- Criar meu diretório no Windows
 D:\Data_Pump\Tablespace_Export
 
+-- Visualizo os diretório que já existem criados
+select * from ALL_DIRECTORIES;
+
 -- Criar diretório no plsql
 create directory exp_tblsp as 'D:\Data_Pump\Tablespace_Export';
 
@@ -48,8 +51,11 @@ grant read, write on directory exp_tblsp to hr;
 -- Sair do plsql e permanecer no cmd
 exit
 
--- comando export
+-- comando export tablespace
 expdp hr/hr@ORCL directory = exp_tblsp dumpfile = tablespace.dmp logfile = tblsp_log.log tablespaces = users, example;
+
+-- comando export schema
+expdp paulo/123456789@orcl schemas=paulo directory=EXP_TBLSP dumpfile=Schema_Paulo_prd.dmp logfile=expdp_log_paulo_prd.log
 
 
 --###############
