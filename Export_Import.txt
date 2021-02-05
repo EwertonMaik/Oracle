@@ -63,6 +63,7 @@ expdp paulo/123456789@orcl schemas=paulo directory=EXP_TBLSP dumpfile=Schema_Pau
 conn sys/sys as sysdba
 
 impdp remap_schema='scott':'tim' remap_tablespace='users':'sysaux' nologfile=y dumpfile=scott.dmp directory=data
+impdp system/123456789@orcl remap_schema=paulo:pedro remap_tablespace=TBS_PAULO_PRD:TBS_PEDRO_HML directory=EXP_TBLSP dumpfile=SCHEMA_PAULO_PRD.dmp logfile=impdp_log_paulo.log
 
 Username : system/sys
 
