@@ -1,3 +1,5 @@
+https://www.linkedin.com/pulse/oracle-backup-export-e-import-ewerton-maik
+
 -- Conhecer opções de Export
 $ exp help=y
 
