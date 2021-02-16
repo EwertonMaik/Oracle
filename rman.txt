@@ -23,6 +23,9 @@ backup as backupset database;
 backup as backupset tablespace TBS_PAULO_PRD;
 backup as backupset tag 'BK_TBS_PAULO_PRD_31_01_2021' tablespace TBS_PAULO_PRD; -- Passado um Tag para o nome do Backup
 
+-- Backup Tablespace pelo RMAM
+backup tablespace TBS_PAULO_PRD;
+
 -- Comando para listar
 list backup;
 list backup summary;
