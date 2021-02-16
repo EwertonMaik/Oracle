@@ -1,3 +1,7 @@
+-- Colocar uma tablespace em modo Backup
+ALTER TABLESPACE recursos_humanos BEGIN BACKUP;
+ALTER TABLESPACE recursos_humanos END BACKUP;
+
 -- Renomear Tablespaces
 ALTER TABLESPACE recursos_humanos RENAME TO recursos;
 
