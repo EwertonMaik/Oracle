@@ -1,4 +1,5 @@
 -- RMAN - Recovary Manager
+Não é possível fazer um backup online no modo noarchivelog
 
 OS comandos abaixo são executados pelo CMD - Windows
 O rman.exe pode ser iniciado pelo diretório de instalação ou chamado diretamente caso o caminho fora adicionado na variável de ambiente.
