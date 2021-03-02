@@ -61,6 +61,9 @@ SELECT * FROM ALL_USERS;
 --Verificando Tabelas do Usuário
 select table_name from USER_TABLES;
 
+-- Verificar as colunas de uma tabela
+SELECT column_name FROM user_tab_cols WHERE table_name = 'nome_tabela';
+
 --Verificar Privilégios dos Usuários
 select * from USER_SYS_PRIVS;
 SELECT * FROM DBA_SYS_PRIVS;
