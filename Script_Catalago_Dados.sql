@@ -114,6 +114,7 @@ ALTER SESSION SET CONTAINER=pdb1;
 ALTER SESSION SET CONTAINER=cdb$root;
 
 --Verificação Listener
+lsnrctl services
 lsnrctl help
 services listener
 lsnrctl status
