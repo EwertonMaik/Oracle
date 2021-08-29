@@ -71,3 +71,64 @@ select
 		STDDEV(bonus) OVER (ORDER BY salary)
 from employees
 where department = 'Marketing';
+
+-- Criando Grupos de de Dados utilizando GROUP BY
+-- É possivel formar grupos por mais de uma coluna ou expressão
+-- Sequência Lógica de Execeução
+1 - WHERE, 2 - GROUP BY, 3 - HAVING, 4 - SELECT, ORDER BY
+
+-- Criando um grupo de department_id onde é exibido a média de salario para cada department_id
+SELECT
+		department_id, -- Coluna que será agrupado os dados de média de salário
+		AVG(salary) -- Função que retorna a média do salario
+FROM   employees
+GROUP BY department_id -- Definido o Grupo
+ORDER BY department_id; -- Ordenado por
+
+-- Utilizando a clásula Group by com mais de uma Coluna ou Expressão
+SELECT
+		department_id, job_id, -- As duas colunas fazem parte do Agrupamento dos Dados
+		SUM(salary) -- Função que soma os salarios pelos Grupo (department_id, job_id)
+FROM employees
+GROUP BY department_id, job_id -- Grupo de Dados
+ORDER BY department_id, job_id; -- Ordenado Dados
+
+-- Consultas incorretas utilizando Funções de Grupo
+SELECT
+	department_id, -- Por conta da inclusão desta coluna, a query obtem erro
+	AVG(salary)
+FROM   employees; -- Deveria possui a cláusula GROUP BY para agrupar os dados por department_id
+
+-- Corrigindo consultas incorretas utilizando Funções de Grupo
+SELECT
+		department_id, 
+		AVG(salary)
+FROM employees
+GROUP BY department_id; -- Incluido a cláusula
+
+-- Consultas incorretas utilizando Funções de Grupo
+SELECT
+		department_id,
+		MAX(salary)
+FROM   employees
+WHERE  MAX(salary) > 10000 -- Obtem erro pois não é possivel utilizar uma função de agregação na clausula WHERE
+GROUP BY department_id;
+
+-- Corrigindo consultas incorretas utilizando Funções de Grupo
+-- Restringindo Grupos utilizando a cláusula HAVING
+SELECT
+		job_id,
+		SUM(salary) TOTAL
+FROM   employees
+WHERE  job_id <> 'SA_REP'
+GROUP BY job_id
+HAVING   SUM(salary) > 10000 -- Clausula HAVING, onde é possivel filtrar os dados usando funções de agregação
+ORDER BY SUM(salary); -- Clausula ORDER BY também aceita ordernar utilizando função de agregação
+
+-- Aninhando Funções de Grupo
+SELECT
+		-- Aninhado duas funções de Agregação - Primeiro calcula a média de todos salarios
+		-- Segundo é pego a maior média com a função MAX
+		MAX(AVG(salary))
+FROM employees
+GROUP BY department_id;
