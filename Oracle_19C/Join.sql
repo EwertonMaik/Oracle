@@ -6,7 +6,7 @@
 4 - LEFT OUTER JOIN
 5 - RIGHT OUTER JOIN
 6 - FULL OUTER JOIN
-7 - CROSS JOIN
+7 - CROSS JOIN -- Produto Caetesiano, multiplicação de todas linhas de uma tabela pela outra
 8 - JOIN ou INNER JOIN -- A palavra INNER é opcional
 
 -- Utilizando Prefixos Coluna com Nomes de Tabela 
@@ -159,3 +159,11 @@ SELECT
 		d.department_name
 FROM employees e
 JOIN departments d USING (department_id);
+
+-- Gerando um Produto Cartesiano utilizando Cross Join
+SELECT
+		last_name,
+		department_name
+FROM   employees
+CROSS JOIN departments; -- Combinação N para N, Multiplica todas linhas da Tabela employees pela tabela departments
+-- E Todas linhas de departments x todas linhas de employees
