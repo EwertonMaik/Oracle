@@ -148,3 +148,7 @@ select status from v$instance; -- Verificando Status da Instância
 alter database archivelog; -- Altera o modo de LOG
 alter database open; -- Abre o Banco de Dados para uso
 
+
+-- Consultando tabela de parametros o Oracle 11 G
+SELECT * FROM NLS_DATABASE_PARAMETERS
+SELECT * FROM NLS_DATABASE_PARAMETERS where parameter = 'NLS_CHARACTERSET';
