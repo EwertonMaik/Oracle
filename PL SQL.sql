@@ -50,3 +50,18 @@ begin
       dbms_output.put_line('Erro: ' || sqlerrm );
     end;
     /
+
+--## Exemplo 03
+set serveroutput on -- Habilita geração e visualização de mensagens em tela / prompt
+enable -- Habilita a chamada das demais rotinas do pacote
+begin
+  dbms_output.enable(2000);
+  dbms_output.put_line('TESTE')
+end;
+/
+
+disable -- desabilita a chamada das demais rotinas do pacote
+put -- inclui uma informação na área de buffer
+put_line -- inclui uma informação na área de buffer e adiciona, simultaneamente, um caractere para quebra de linha
+get_line -- recupera uma linha do buffer
+get_lines -- recupera várias linhas do buffer
