@@ -61,7 +61,35 @@ end;
 /
 
 disable -- desabilita a chamada das demais rotinas do pacote
+begin
+  dbms_output.disable;
+  dbms_output.put_line('TESTE');
+end;
+/
+
 put -- inclui uma informação na área de buffer
+begin
+  dbms_output.put('T'); -- Só adiciona a informação ao Buffer
+  dbms_output.put('E');
+  dbms_output.put('S');
+  dbms_output.put('T');
+  dbms_output.put('E');
+  dbms_output.new_line; -- Realiza a impressão em tela da informação em uma LINHA
+end;
+/
+
 put_line -- inclui uma informação na área de buffer e adiciona, simultaneamente, um caractere para quebra de linha
+begin
+  dbms_output.put_line('T');
+  dbms_output.put_line('E');
+  dbms_output.put_line('S');
+  dbms_output.put_line('T');
+  dbms_output.put_line('E');
+end;
+/
+
 get_line -- recupera uma linha do buffer
+
+
 get_lines -- recupera várias linhas do buffer
+
