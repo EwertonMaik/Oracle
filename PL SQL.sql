@@ -89,7 +89,61 @@ end;
 /
 
 get_line -- recupera uma linha do buffer
+set serveroutput off
+begin
+  dbms_output.enable(2000);
+  dbms_output.put('Como');
+  dbms_output.new_line;
+  dbms_output.put('aprender');
+  dbms_output.new_line;
+  dbms_output.put('PLSQL');
+  dbms_output.new_line;
+end;
+/
 
+set serveroutput on
+declare
+  var1    varchar2(100) default null;
+  var2    varchar2(100) default null;
+  var3    varchar2(100) default null;
+  status  number        default null;
+begin
+  dbms_output.get_line(var1, status);
+  dbms_output.get_line(var2, status);
+  dbms_output.get_line(var3, status);
+  
+  dbms_output.put_line('Pergunta: ' || var1 || ' ' || var2 || ' ' || var3);
+end;
+/
 
 get_lines -- recupera várias linhas do buffer
+set serveroutput off
+begin
+  dbms_output.enable(2000);
+  
+  dbms_output.put('Como');
+  dbms_output.new_line;
+  dbms_output.put('aprender');
+  dbms_output.new_line;
+  dbms_output.put('PLSQL');
+  dbms_output.new_line;
+end;
+/
 
+set serveroutput on
+declare
+  tab       dbms_output.chararr;
+  qtlines   number            default 3;
+  res       varchar2(100)     default null;
+begin
+  dbms_output.get_lines(tab, qtlines);
+  dbms_output.put_line('Retornou: ' || qtlines || ' registros.');
+  
+  for i in 1..qtlines loop
+    res := res || ' ' || tab(i);
+  end loop;
+  
+  dbms_output.put_line('Pergunta: ' || res);
+  
+end;
+/
