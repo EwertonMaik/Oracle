@@ -147,3 +147,39 @@ begin
   
 end;
 /
+
+--## Exemplo 04
+--## Variáveis BIND
+set autoprint on -- ## Comando para habilitar impressão de uma variável BIND
+variable mensagem varchar2(200)
+begin
+  :mensagem := 'Curso PLSQL';
+end;
+/
+
+--## Visualizando o valor da variável através de uma instrução SELECT
+select :mensagem from dual;
+
+--## Atribuindo um valor para uma variávle BIND
+variable gdepno number
+exec :gpedno := 10
+select ename from emp where deptno = :gdepno;
+print gdepno;
+
+--## Comando para visualizar todas as variáveis BIND declaradas em uma sessão
+var
+
+--## Variáveis de Substituição - &
+define wempno = 7369
+--define wempno = 10
+select ename from emp where empno = &wempno;
+
+begin
+  for i in (select ename from emp where empno = &wempno) loop
+    dbms_output.put_line(i.ename);
+  end loop;
+end;
+/
+
+--## Consultando o nome de uma variável de subistituição
+define wempno
