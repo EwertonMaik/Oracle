@@ -183,3 +183,48 @@ end;
 
 --## Consultando o nome de uma variável de subistituição
 define wempno
+
+define gfrom = 'from emp'
+define gwhere = 'where empno = 7369'
+define gorderby = 'order by 1'
+
+select ename &gfrom &gwhere &gorderby;
+
+--## Funciona dentro de um Bloco PL/SQL
+begin
+  for i in (select ename &gfrom &gwhere &gorderby) loop
+  dbms_output.put_line(i.ename);
+end;
+/
+
+--## Excluíndo definição de uma variável de Substituição
+undefine gfrom
+
+--## Usando uma variável substituição sem a necessidade de defini-la ou declara-la
+select job from emp where empno = &codigo;
+
+--## Usando a variável de substituição
+declare
+  wjob emp.job%type;
+begin
+  select job into wjob from emp where empno = &cod_emp;
+  dbms_output.put_line(wjob);
+end;
+/
+
+--## Variável BIND em Arquivo
+1 - select ename, job from emp where deptno = :bdeptno
+2 - save B_EMP.sql -- Criado arquivo B_EMP.sql
+3 - get B_EMP.sql
+4 - select ename, job from emp where deptno = :bdeptno
+5 - var bdeptno number
+6 - exec :bdeptno := 10
+7 - print bdeptno
+8 - @B_EMP.sql -- Executando o arquivo de script SQL com Variável BIND
+
+--## Variável Substituição em Arquivo
+1 - select ename from emp where deptno = &sdeptno
+2 - save S_EMP.sql -- Criado arquivo S_EMP.sql
+3 - @S_EMP.sql -- Executando o arquivo de script SQL com Variável Substituição
+  - Será solicitado para informar o valor para sdeptno
+4 - define sdeptno = 10 -- Caso declare a variável no inicio do programa, não será mais solicitado para preencher o valor da variável
