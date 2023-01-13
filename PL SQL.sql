@@ -228,3 +228,28 @@ end;
 3 - @S_EMP.sql -- Executando o arquivo de script SQL com Variável Substituição
   - Será solicitado para informar o valor para sdeptno
 4 - define sdeptno = 10 -- Caso declare a variável no inicio do programa, não será mais solicitado para preencher o valor da variável
+
+-- ## Excluíndo a definição da variável e será solicitado novamente a inserção do valor novo da variável
+undefine sdeptno
+@S_EMP.sql
+
+-- ## && Duplo - Faz com que o SQL crie a definição da variável.
+1 - edit S_EMP.sql
+2 - get S_EMP.sql - select ename from emp where deptno = &&sdeptno
+3 - @S_EMP.sql
+
+define -- Visualizando todas as variáveis da sessão.
+
+-- ## Passagens de valores para as variáveis de substituição
+1 - edit S_EMP.sql
+2 - get S_EMP.sql - select ename from emp where deptno = &1
+3 - @S_EMP.sql 10 -- Realizando a execução do Script e passando o valor 10 como parâmetro
+4 - @S_EMP.sql -- Na proxima execução o parâmetro anterior ficara salvo na sessão
+5 - @S_EMP.sql 20 -- Realizando a execução do Script e passando um novo parâmetro
+
+-- ## Usando a variável de substituição com a ACCEPT
+1 - edit S_EMP.sql
+2 - get S_EMP.sql
+3 - accept SDEPTNO number for 999 default 20 prompt "Informe o deptno: "
+4 - select ename from emp where deptno = &SDEPTNO
+5 - @S_EMP.sql
