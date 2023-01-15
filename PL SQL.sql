@@ -253,3 +253,39 @@ define -- Visualizando todas as variáveis da sessão.
 3 - accept SDEPTNO number for 999 default 20 prompt "Informe o deptno: "
 4 - select ename from emp where deptno = &SDEPTNO
 5 - @S_EMP.sql
+
+--## Escopo de Identificadores
+create or replace procedure folha_pagamento(pqt_dias number) is
+wqt_dias    number;
+wvl_bruto   number;
+wvl_ir      number;
+wvl_liquido number;
+
+begin
+  wvl_bruto   := (pqt_dias * 25);
+  declare
+  wtx_ir   number;
+  begin
+    if wvl_bruto > 5400 then
+      wtx_ir := 27;
+      dbms_output.put_line('Taxa IR: ' || wtx_ir);
+    else
+      wtx_ir := 8;
+      dbms_output.put_line('Taxa IR: ' || wtx_ir);
+    end if;
+    wvl_ir      := (wvl_bruto * wtx_ir) / 100;
+    wvl_liquido := (wvl_bruto - wvl_ir)
+  end;
+  dbms_output.put_line('Valor do salario bruto: ' || wvl_bruto);
+  dbms_output.put_line('Desconto do valor do IR: ' || wvl_ir);
+  dbms_output.put_line('Valor do salario liquido: ' || wvl_liquido);
+  exception
+    when others then
+      dbms_output.put_line('Erro ao calcular pagamento. Erro: ' || sqlerrm);
+end folha_pagamento;
+/
+
+begin
+  folha_pagamento(pqt_dias => 300);
+end;
+/
