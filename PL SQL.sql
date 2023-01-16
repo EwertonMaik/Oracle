@@ -289,3 +289,20 @@ begin
   folha_pagamento(pqt_dias => 300);
 end;
 /
+--## Transações e SAVEPOINT
+begin
+  insert into dept values (41, 'GENERAL LEDGER', '');
+  savepoint ponto_um;
+  
+  insert into dept values (42, 'PURCHASING', '');
+  savepoint ponto_dois;
+  
+  insert into dept values (43, 'RECEIVABLES', '');
+  savepoint ponto_tres;
+  
+  insert into dept values (44, 'PAYABLES', '');
+  rollback to savepoint ponto_dois;
+  
+  commit;
+end;
+/
