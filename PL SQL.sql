@@ -336,3 +336,67 @@ begin
     dbms_output.put_line('Erro ao selecionar empregado.');
 end;
 /
+
+declare
+  wempno  number;
+begin
+  select empno into wempno from emp where deptno = 30;
+exception
+  when no_data_found then
+    dbms_output.put_line('Empregado não encontrado.');
+  when others then
+    dbms_output.put_line('Erro ao selecionar empregado.');
+end;
+/
+
+declare
+  wempno  number;
+begin
+  select empno into wempno from emp where deptno = 30;
+exception
+  when no_data_found then
+    dbms_output.put_line('Empregado não encontrado');
+  when too_many_rows then
+    dbms_output.put_line('Erro: O código de departamento informado' || 'retornou mais de um registro.');
+  when others then
+    dbms_output.put_line('Erro ao selecionar empregado.');
+end;
+/
+
+--## Variáveis Internas do Banco Oracle, quando uma Exception Others é disparada
+-- sqlcode - Recebe o valor do código do Erro
+-- sqlerrm - Recebe o valor do código do Erro e a Descrição do Erro
+declare
+  wempno  number;
+begin
+  select empno into wempno from emp where deptno = 30;
+exception
+  when no_data_found then
+    dbms_output.put_line('Empregado não encontrado.');
+  when others then
+    dbms_output.put_line('Erro ao selecionar empregado. Erro: ' || sqlerrm || ' - Código: (' || sqlcode || ').');
+end;
+/
+
+declare
+  wsal    number;
+  wdeptno number;
+begin
+  begin
+    select avg(sal), deptno into wsal, wdeptno from emp where deptno = 99 group by deptno;
+    exception
+      when no_data_found then
+        dbms_output.put_line('Valores não encontrados para o departamento 99.');
+      when others then
+        dbms_output.put_line('Erro ao selecionar valores referentes ao depto. 99. ' || 'Erro: ' || sqlerrm || '.');
+  end;
+  begin
+    insert into emp (empno, ename, job, mgr, hiredate, sal, comm, deptno) values (8002, 'ANGELINA', 'MANAGER', 7839, TO_DATE('20/10/2011','DD/MM/RRRR'), wsal, null, 20 );
+    commit;
+  eception
+    when others then
+      dbms_output.put_line('Erro ao inserir novo empregado. ' || 'Erro: ' || sqlerrm || '.');
+  end;
+  
+end;
+/
