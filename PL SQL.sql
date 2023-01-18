@@ -323,3 +323,16 @@ declare
   CD_CARGO  EMPLOYEE.JOB%TYPE;    -- VARIÁVEL RECEBE O TIPO DE DADOS DA TABELA.COLUNA
   REG_DEPT  DEPARTMENT%ROWTYPE;   -- VARIÁVEL RECEBE O TIPO DE DADOS DA ESTRUTURA DA TABELA
   
+-- ## Exceçoes
+-- Existe dois tipos de exceções dentro do Oracle :As predefinidas e as definidas pelo usuário.
+declare
+  wempno number;
+begin
+  select empno into wempno from emp where deptno = 9999;
+  exception
+  when no_data_found then
+    dbms_output.put_line('Empregado não encontrado.');
+  when others then
+    dbms_output.put_line('Erro ao selecionar empregado.');
+end;
+/
