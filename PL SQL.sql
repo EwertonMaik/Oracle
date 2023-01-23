@@ -397,6 +397,50 @@ begin
     when others then
       dbms_output.put_line('Erro ao inserir novo empregado. ' || 'Erro: ' || sqlerrm || '.');
   end;
+  dbms_output.put_line('Empregado ANGELINA inserido com sucesso.');
+  exception
+    when no_data_found then
+      dbms_output.put_line('Empregado não encontrado.');
+    when too_many_rows then
+      dbms_output.put_line('Erro: O código de departamento informado ' || 'retornou mais de um registro.');
+    when others then
+      dbms_output.put_line('Erro ao inserir empregado. Erro: ' || sqlerrm || ' - Código : (' || sqlcode || ').' );
   
 end;
 /
+
+-- ## Personalizando códigos de ERRO - ORACLE
+declare
+  wsal    number;
+  wdeptno number;
+begin
+  begin
+    select avg(sal), deptno into wsal, wdeptno from emp where deptno = 99 group by deptno;
+    
+    exception
+      when no_data_found then
+        raise_application_error(-20000, 'Valores não encontrados para o departamento 99.');
+      when others then
+        dbms_output.put_line('Erro ao selecionar valores referentes ao deptno. 99.. ' || 'Erro: ', sqlerrm || '.');
+  end;
+  begin
+    insert into emp (empno, ename, job, mgr, hiredate, sal, comm, deptno) values (8002, 'ANGELINA', 'MANAGER', 7839, TO_DATE('20/10/2011','DD/MM/RRRR'), wsal, null, 20 );
+    commit;
+    exception
+      when others then
+        raise_application_error(-20000, 'Erro ao inserir um novo empregado. ' || 'Erro: ' || sqlerrm || ',');
+  end;
+  
+  dbms_output.put_line('Empregado ANGELINA inserido com sucesso.');
+  
+  exception
+  when no_data_found then
+    dbms_output.put_line('Empregado não encontrado.');
+  when too_many_rows then
+    dbms_output.put_line('Erro: O código de departamento informado' || 'retornou mais de um registro.');
+  when others then
+    dbms_output.put_line('Erro ao inserir empregado. Erro: ' || sqlerrm || ' - Código: (' || sqlcode || ').' );
+end;
+/
+
+
