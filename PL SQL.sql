@@ -516,3 +516,46 @@ begin
 end;
 /
 
+--### Estruturas do comando IF-END IF
+begin
+  if <condicao> then
+    <instruções>
+  end if;
+end;
+/
+
+declare
+  x   number := 10;
+  res number;
+begin
+  res := mod(x,2);
+  if res = 0 then
+    dbms_output.put_line('O resto da divisão é zero!');
+  end if;
+  dbms_output.put_line('Resultado do Cálculo: ' || res);
+end;
+/
+
+declare
+  x   number := 7;
+  res number;
+begin
+  res   :=  mod(x,2);
+  if res = 0 then
+    dbms_output.put_line('O resto da divisão é zero!');
+  end if;
+  dbms_output.put_line('Resultado do Cálculo: ' || res);
+end;
+/
+
+--### Estruturas do comando IF-ELSE-END IF
+begin
+  if <condicao> then
+    <instruções>
+  else
+    <instruções>
+  end if;
+end;
+/
+
+
