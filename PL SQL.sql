@@ -655,3 +655,24 @@ begin
 end;
 /
 
+-- ## Comandos de Repetição - LOOP, WHILE LOOP, FOR LOOP
+
+-- FOR LOOP
+begin
+  for i in 1..10 loop
+    dbms_output.put_line('5 X ' || i || ' = ' || (5 * i) );
+  end loop;
+end;
+/
+
+-- Utilizando REVERSE no LOOP FOR
+begin
+  for i in REVERSE 1..10 loop
+    dbms_output.put_line('5 x ' || i || ' = ' || (5*1) );
+  end for;
+end;
+/
+
+
+
+
