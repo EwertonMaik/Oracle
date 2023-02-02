@@ -583,3 +583,75 @@ begin
   end if;
 end;
 /
+
+declare
+  x   number := 10;
+  --x   number := 11;
+  --x   number := -6;
+  res number;
+begin
+  res := mod(x,5);
+  if res = 0 then
+    dbms_output.put_line('O resto da diivisão é zero!');
+  elsif res > 0 then
+    dbms_output.put_line('O resto da divisão não é zero!');
+  else
+    dbms_output.put_line('O resto da divisão é menor zero!');
+  end if;
+    dbms_output.put_line('Resultado do cálculo : ' || res);
+end;
+/
+
+--### Declaração Aninhadas IF
+begin
+  if <condição> then
+    if <condição> then
+      <instruções>
+    else
+      <instruções>
+      if <condição> then
+        <instruções>
+      else
+        <instruções>
+      end if;
+    end if;
+  end if;
+end;
+
+
+declare
+  x1    number  := 10;
+  x2    number  := 5;
+  op    varchar2(1) := '+';
+  res   number;
+begin
+  if (x1 + x2) = 0 then
+    dbms_output.put_line('Resultado : 0');
+  elsif op = '*' then
+    res := x1 * x2;
+  elsif op = '/' then
+    if x2 = 0 then
+      dbms_output.put_line('Erro de divisão por zero!');
+    else
+      res := x1 / x2;
+    end if;
+  elsif op = '-' then
+    res := x1 - x2;
+    if res = 0 then
+      dbms_output.put_line('Resultado igual a zero!');
+    elsif res < 0 then
+      dbms_output.put_line('Resultado menor que zero!');
+    elsif res > 0 then
+      dbms_output.put_line('Resultado maior a zero!');
+    end if;
+   elsif op = '+' then
+    res := x1 + x2;
+   else
+    dbms_output.put_line('Operador inválido!');
+   end if;
+   dbms_output.put_line('Resultado do cálculo : ' || res);
+ end;
+/
+end;
+/
+
