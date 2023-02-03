@@ -673,6 +673,27 @@ begin
 end;
 /
 
+-- LOOP FOR Aninhados
+begin
+  for x in 5..6 loop
+    dbms_output.put_line('Tabuada de ' || x);
+    dbms_output.put_line(' ');
+    
+    for y in 1..10 loop
+      dbms_output.put_line(x || ' X ' || y || ' = ' || (x * y) );
+    end loop;
+    
+    dbms_output.put_line(' ');
+  end loop;
+end;
+/
 
+begin
+  for x in 1..15 loop
+    if mod(x, 2) = 0 then
+      dbms_output.put_line('Número divisível por 2: ' || x);
+  end loop;
+end;
+/
 
 
