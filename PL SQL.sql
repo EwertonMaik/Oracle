@@ -756,5 +756,11 @@ end;
 /
 
 -- CURSORES
+-- Existem dois tipos de cursosres no PL/SQL, os explícitos e os implícitos
+-- O Oracle cria CURSOSRES implícitos quando utilizamos operações de UPDATE e DELETE dentro de uma aplicação.
+
+--## Exemplo 01
+cursor c1 is select ename, job from emp where deptno = 30;
+
 
 
