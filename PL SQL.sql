@@ -697,3 +697,64 @@ end;
 /
 
 
+declare
+inter1    number default 1;
+inter2    number default 15;
+
+begin
+  for x in inter1..inter2 loop
+    if mod(x, 2) = 0 then
+      dbms_output.put_line('Número divisível por 2: ' || x)
+    end if;
+  end loop;
+end;
+/
+
+-- ## WHILE LOOP
+declare
+  x           number          default 0;
+  label_vert  varchar2(240)   default '&label';
+  tam_label   number          default 0;
+begin
+  tam_label := length(label_vert);
+  while (x < tam_label) loop
+    x := x + 1;
+    dbms_output.put_line(substr(label_vert, x, 1) );
+  end loop;
+end;
+/
+
+declare
+  x           number          default 0;
+  label_vert  varchar2(240)   default '&label';
+  tam_label   number          default 0;
+begin
+  tam_label := length(label_vert);
+  loop
+    x := x + 1;
+    dbms_output.put_line(substr(label_vert, x, 1) );
+    if x = tam_label then
+      exit;
+    end if;
+  end loop;
+end;
+/
+
+-- ### No Oracle não existe o comando - repeat until. E sim o comando loop e exit when
+declare
+  x           number        default 0;
+  label_vert  varchar2(240) default '&label';
+  tam_label   number        default 0;
+begin
+  tam_label := length(label_vert);
+  loop
+    x := x + 1;
+    dbms_output.put_line(substr(label_vert, x, 1) );
+    exit when x = tam_label;
+  end loop;
+end;
+/
+
+-- CURSORES
+
+
