@@ -762,5 +762,25 @@ end;
 --## Exemplo 01
 cursor c1 is select ename, job from emp where deptno = 30;
 
+-- Passando parâmetro para o Cursor
+cursor c1(pdeptno number, pjob varchar2) is select empno, ename from emp where deptno = pdeptno and job > pjob;
+
+--
+declare
+  cursor c1 is select ename, job from emp where deptno = 30; -- Lista todos os empregados do departamento 30.
+  r1 c1%rowtype; -- Variável que recebe estrutura do cursor
+  r1 emp%rowtype; -- Variável que recebe a estrutura da tabela EMP
+begin
+  open c1;
+  loop
+    fetch c1 into r1;
+    exit when c1%notfound;
+      dbms_output.put_line('Nome: ' || r1.ename || 'Cargo: ' || r1.job);
+  end loop;
+  close c1;
+end;
+/
+
+
 
 
