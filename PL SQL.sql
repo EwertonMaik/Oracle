@@ -781,6 +781,30 @@ begin
 end;
 /
 
+--
+declare
+  cursor c1(pdname varchar2, pmgr number) is select ename, job, dname from emp, dept where emp.deptno = dept.deptno and dept.loc = pdname and emp.mgr = pmgr;
+  r1 c1%rowtype;
+begin
+  open c1('CHICAGO', 7698);
+  open c1( pmgr => 7698, pdname => 'CHICAGO') -- Segunda alternativa abrir o cursor usando passagem de parâmetro nomeada
+  loop
+    fetch c1 into r1;
+    exit when c1%notfound;
+    dbms_output.put_line('Nome: ' || r1.ename || 'Cargo: ' || r1.job);
+  end loop;
+  close c1;
+end;
+/
 
+-- Usando cursor com FOR LOOP - Não precisa abrir e fechar cursor
+declare
+  cursor c1(pdname varchar2, pmgr number) is select ename, job, dname from emp, dept where emp.deptno = dept.deptno and dept.loc = pdname and emp.mgr = pmgr;
+begin
+  for r1 in c1(pmgr => 7698, pdname => 'CHICAGO') loop
+    dbms_output.put_line('Nome : ' || r1.ename || 'Cargo : ' || r1.job);
+  end loop;
+end;
+/
 
 
