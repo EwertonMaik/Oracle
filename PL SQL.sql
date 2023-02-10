@@ -803,6 +803,31 @@ declare
 begin
   for r1 in c1(pmgr => 7698, pdname => 'CHICAGO') loop
     dbms_output.put_line('Nome : ' || r1.ename || 'Cargo : ' || r1.job);
+    -- Duas formas de sair da estrutura do FOR LOOP antes de terminar sua execução
+    /*
+    * Primeira
+    if r1.ename = 'MARTIN' then
+      exit;
+    end if;
+    
+    * Segunda
+    exit when r1.ename = 'MARTIN';
+    */
+  end loop;
+end;
+/
+
+-- Cursosres sem a clúsula de declaração
+declare
+
+begin
+  for r1 in (select enpbo, ename from emp where job = 'MANAGER') loop
+      dbms_output.put_line('Gerente : ' || r1.empno || ' - ' || r1.ename);
+  
+      for r2 in (select empno, ename, dname from emp, dept where emp.deptno = dept.deptno and mgr = r1.empno) loop
+        dbms_output.put_line(' Subordinado: ' || r2.empno || ' - ' || r2.ename);
+      end loop;
+      dbms_output.put_line('');
   end loop;
 end;
 /
