@@ -848,5 +848,127 @@ open c1(pmgr => 7689), ppdname -> 'CHICAHO');
 end;
 /
 
+-- Cursores Implicitos
+-- %found
+declare
+  wename    emp.ename%type;
+  wjob      emp.job%type;
+  wdname    dept.dname%type;
+begin
+  select  ename, job, dname
+  into    wename, wjob, wdname
+  from    emp, dept
+  where   emp.deptno  = dept.deptno
+  and     dept.loc    = 'CHICAGO'
+  and     emp.mgr     = 7698
+  and     job         = 'CLERK'
+  
+  if SQL%found then
+    dbms_output.put_line('O select retornou o seguinte registro: Nome: ' || wename || ' Cargo: ' || wjob);
+  end if;
+end;
+/
+
+-- %notfound
+declare
+  cursor c1(pdname varchar2, pmgr number) is select ename, job, dname from emp, dept
+                                             where emp.deptno = dept.deptno and dept.loc = pdname and emp.mgr = pmgr;
+  r1 c1%rowtype;
+begin
+  open c1(pmgr => 7698, pdname => 'CHICAGO');
+  loop
+    fetch c1 into r1;
+      exit when c1%notfound;
+      dbms_output.put_line('Nome: ' || r1.ename || 'Cargo: ' || r1.job);
+  end loop;
+  close c1;
+end;
+/
+
+
+-- Cursores implícitos
+declare
+  wename    emp.ename%type;
+  wjob      emp.job%type;
+  wdname    dept.dname%type;
+begin
+  update    emp
+  set       deptno  = 100 
+  where     job     = 'ANALISTA_1';
+  
+  if SQL%notfound then
+    dbms_output.put_line('Nenhum registro foi atualizado.')
+  end if;
+end;
+/
+
+-- %rowcount - Conta o Número de linhas lidas ou afetadas
+declare
+  cursor c1(pdname varchar2, pmgr number) is
+  select ename, job, dname from emp, dept
+  where emp.deptno = dept.deptno
+  and dept.loc = pdname
+  and emp.mgr = pmgr;
+  
+  r1 c1%rowtype;
+  
+begin
+  open c1(pmgr => 7698, pdname => 'CHICAGO');
+  loop
+    fetch c1 into r1;
+    exit when c1%notfound;
+    dbms_output.put_line('Nome: ' || r1.ename || 'Cargo: ' || r1.job);
+  end loop;
+  
+  dbms_output.put_line('');
+  dbms_output.put_line('Registros recuperados: ' || c1%rowcount || '.');
+  close c1;
+end;
+/
+
+
+declare
+  wename  emp.ename%type;
+  wjob    emp.job%type;
+  wdname  dept.dname%type;
+begin
+  delete  emp
+  where   deptno = (select deptno from dept where dname = 'SALES');
+  
+  dbms_output.put_line(SQL%rowcount || 'registro(s) foram excluídos.');
+  commit;
+end;
+/
+
+
+-- %isopen - Verifica se o cursor esta aberto ou não
+declare
+  cursor c1(pdname varchar2, pmgr number) is select ename, job, dname from emp, dept
+                                             where emp.deptno = dept.deptno
+                                             and dept.loc = pdname
+                                             and emp.mgr = pmgr;
+   r1 c1%rowtype;
+begin
+  loop
+    if c1%isopen then
+      fetch c1 into r1;
+        if c1%notfound then
+          close c1;
+          exit;
+        else
+          dbms_output.put_line('Nome: ' || r1.ename || 'Cargo: ' || r1.job);
+        end if;
+    else
+      dbms_output.put_line('O cursor não foi aberto!');
+      dbms_output.put_line('Abrindo cursor...');
+      open c1(pmgr => 7698, pdname => 'CHICAGO')
+    end if;
+  end loop;
+end;
+/
+
+
+-- CURSOSRES ENCADEADOS
+
 
 
