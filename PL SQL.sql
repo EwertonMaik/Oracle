@@ -968,7 +968,51 @@ end;
 /
 
 
--- CURSOSRES ENCADEADOS
+-- CURSOSRES ENCADEADOS - Cursores sendo manipulados dentro de outros cursosres.
+declare
+  cursor c1 is select empno, ename from emp where job = 'MANAGER';
+  cursor c2(pmgr number) is select empno, ename, dname from emp, dept where emp.deptno = dept.deptno and mgr = pmgr;
+begin
+  for r1 in c1 loop -- Primeiro Loop Cursor C1
+    dbms_output.put_line('Gerente: ' || r1.empno -|| ' - ' || r1.ename);
+      for r2 in c2(r1.empno) loop -- segundo Loop Cursor C2
+        dbms_output.put_line('Subordinado: ' || r2.empno || ' - ' || r2.ename);
+      end loop;
+      dbms_output.put_line('');
+  end loop;
+end;
+/
+
+-- CURSOR COM FOR UPDATE - Torna a instrução com acesso exclusivo - LOCK
+declare
+  cursor c1(pdname varchar2) is select ename, job, dname
+                                from emp, dept
+                                where emp.deptno = dept.deptno
+                                and dept.loc = pdname
+                                for update; -- Aqui todas as colunas então em LOCK
+                                --for update of ename, dname; -- Aqui apenas as colunas informadas entram em LOCK
+                                --for update of ename; -- Apesar de estar selecionando 2 tabelas, pode-se locar apenas uma tabela informando apenas a coluna desejada
+  r1 c1%rowtype;
+begin
+  open c1(pdname => 'DALLAS');
+  loop
+    if c1%isopen then
+      fetch c1 into r1;
+        if c1%notfound then
+          close c1;
+          exit;
+        else
+          dbms_output.put_line('Nome: ' || r1.ename || 'Cargo: ' || r1.job);
+        end if;
+    else
+      dbms_output.put_line('O Cursor não foi aberto!');
+      exit;
+    end if;
+  end loop;
+end;
+/
+
+-- Utilizando FOR UPDATE com NOWAIT
 
 
 
