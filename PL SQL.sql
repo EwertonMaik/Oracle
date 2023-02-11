@@ -832,4 +832,21 @@ begin
 end;
 /
 
+declare
+  cursor c1(pdname varchar2, pmgr number) is select ename, job, dname from emp, dept where emp.deptno = deptno and dept.loc = pdname and emp.mgr = pmgr;
+  r1 c1%rowtype;
+begin
+open c1(pmgr => 7689), ppdname -> 'CHICAHO');
+  loop
+  if c1%joun then
+    dbms_output.put_line('Nome: || r1.ename ||', 'Cargo : ' r1.job)
+  else
+    exit
+  emd if;
+ end loop;
+ close c1;
+end;
+/
+
+
 
