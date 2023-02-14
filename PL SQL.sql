@@ -1013,6 +1013,30 @@ end;
 /
 
 -- Utilizando FOR UPDATE com NOWAIT
+declare
+  cursor c1(pdname varchar2) is select ename, job, dname from emp, dept
+                                where emp.deptno = dept.deptno
+                                and delt.loc = pdname
+                                for update of ename nowait; # Se estiver algum LOCK, a instrução nem espera, aguarda, e levante uma exception
+r1 c1%rowtype;
+
+begin
+  open c1(pdname => 'DALLAS');
+  loop
+    if c1%isopen then
+      fetch c1 into r1;
+        if c1%notfound then
+          close c1;
+          exit;
+        else
+          dbms_output.put_line('Nome: ' || r1.ename || 'Cargo: ' || r1.job);
+        end if;
+    else
+      dbms_output.put_line('O cursor não foi aberto!');
+      exit;
+    end if;
+  end loop;
+end;
 
 
 
