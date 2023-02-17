@@ -1037,6 +1037,84 @@ begin
     end if;
   end loop;
 end;
+/
+
+-- Utilizando FOR UPDATE com CURRENT OF.
+declare
+  cursor c1(pdeptno number) is select * from emp where deptno = pdeptno for update of sal nowait;
+  r1 c1%rowtype;
+  wreg_excluidos number default 0;
+begin
+  open c1(pdepto => 10);
+  loop
+    fetch c1 into r1;
+    exit when c1%notfound;
+    
+    update emp set sal = sal + 100.00
+    where current of c1;
+    
+    wreg_excluidos := wreg_excluidos + sql%rowcount;
+    
+  end loop;
+  
+  dnms_output.put_line(wreg_excluidos || 'registros excluídos!')
+;end;
+/
+
+
+declare
+  cursor c1(pdloc varchar2) is select ename, dname from emp, dept
+                               where emp.deptno = dept.deptno
+                               and dept.loc = pdloc
+                               for update of emp.ename, dept.loc;
+r1 c1%rowtype;
+wreg_atua_dep number default 0;
+wreg_excl_emp number default 0;
+
+begin
+  open c1(pdloc => 'NEW YORK');
+  loop
+    fetch c1 into r1;
+    exit when c1%notfound;
+    
+    update dept set loc = 'FLORIDA' where current of c1;
+    wreg_atua_dep := wreg_atua_dep + sql%rowcount;
+    
+    delete emp where current of c1;
+    wreg_excl_emp := wreg_excl_emp + sql%rowcount;
+    
+  end loop;
+  
+  dbms_output.put_line(wreg_atua_dep || 'registros de departamentos atualizados!');
+  dbms_output.put_line(wreg_excl_emp || 'registros de empregados excluídos!')
+  
+end;
+/
+
+
+declare
+  cursor c1(pdloc varchar2) is select ename, dname from emp, deptt
+                               where emp.deptno = dept.deptno
+                               and dept.loc = pdloc
+                               for update of emp.ename, dept.loc;
+  r1 c1%rowtype;
+  wreg_atua_dep number default 0;
+  wreg_excl_emp number default 0;
+
+begin
+  open c1(pdloc => 'NEW YORK');
+  loop
+    fetch c1 into r1;
+    exit when c1%notfound;
+    
+    delete emp when current of c1;
+    wreg_excl_emp := wreg_excl_emp + sql%rowcount;
+    
+  end loop;
+  dbms_output.put_line(wreg_excl_emp || 'registros de empregados excluídos!');
+  
+end;
+/
 
 
 
