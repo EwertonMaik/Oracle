@@ -1117,4 +1117,79 @@ end;
 /
 
 
+declare
+  cursor c1(pdloc varchar2) is select ename, dname from emp, dept
+                               where emp.deptno = dept.deptno
+                               and dept.loc = pdloc
+                               for update of emp.ename;
+   r1 c1%rowtype;
+   
+   wreg_atual_dep number default 0;
+   wreg_excl_emp number default 0;
+begin
+  open c1(pdloc => 'NEW YORK');
+  loop
+    fetch c1 into r1;
+    exit when c1%notfound;
+    
+    delete emp where current of c1;
+    
+    wreg_excl_emp := wreg_excl_emp + sql%rowcount;
+  end loop;
+  
+  dbms_output.put_line(wreg_excl_emp || 'registros de empregados excluídos!');
+  
+end;
+/
 
+
+-- Exemplo - Aplicando o FOR UPDATE em uma tabela e o DELETE em outra - Resultado é igual a ERRO
+declare
+  cursor c1(pdloc varchar2) is select ename, dname from emp, dept
+                               where emp.deptno = dept.deptno
+                               and dept.loc = pdloc
+                               for update of dept.loc;
+  r1 c1%rowtype;
+  
+  wreg_atua_dep number default 0;
+  wreg_excl_emp number default 0;
+  
+begin
+  open c1(pdloc => 'NEW YORK');
+  loop
+    fetch c1 into r1;
+    exit when c1%notfound;
+    
+    delete emp where current of c1;
+    
+    wreg_excl_emp := wreg_excl_emp + sql%rowcount;
+    
+  end loop;
+  
+  dbms_output.put_line(wreg_excl_emp || 'registros de empregados excluídos!')
+  
+end;
+/
+
+
+declare
+  cursor c1(pdloc varchar2) is select dname from dept where dept.loc = pdloc for update;
+  r1 c1%rowtype;
+  wreg_atua_dep number default 0;
+begin
+  open c1(pdloc => 'NEW YORK');
+  loop
+    fetch c1 into r1;
+    exit when c1%notfound;
+    
+    update dept set loc = 'FLORIDA' where current of c1;
+    
+    wreg_atua_dep := wreg_atua_dep + sql%rowcount;
+    
+  end loop;
+  dbms_output.put_line(wreg_atua_dep || 'registros de departamentos atualizados!');
+end;
+/
+
+
+-- ## Funções de Caracteres e Operadores Aritméticos
