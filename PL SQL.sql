@@ -1193,3 +1193,91 @@ end;
 
 
 -- ## Funções de Caracteres e Operadores Aritméticos
+INITCAP - Retorna o primeiro caractere de cada palavra em maiúscula
+LOWER - Força caracteres maiúsculos aparecerem em minúsculo
+UPPER - Força caracteres minúsculos aparecerem em mai´sculos
+SUBSTR - Extrai um trecho de uma string, posição inicial e quantidade
+TO_CHAR - Converte um valor númerico para uma string
+INSTR - Retorna a posição do primeiro caractere encontrado passado como parâmetro
+LENGTH - Traz o tamanho dos caracteres em bytes
+RPAD - Faz alinhamento à esquerda e preenche com caracteres à direita
+LPAD - Faz alinhamento à direita e preenche com caracteres à esquerda.
+
+# Exemplos:
+declare
+  wnome1 varchar2(100) default 'analista de sistemas';
+  wnome2 varchar2(100) default 'PEDREIRO';
+  wnome3 varchar2(100) default 'padeiro';
+begin
+  wnome1 := initcap(wnome1);
+  wnome2 := lower(wnome2);
+  wnome3 := upper(wnome3);
+  
+  dbms_output.put_line(wnome1);
+  dbms_output.put_line(wnome2);
+  dbms_output.put_line(wnome3);
+end;
+/
+
+
+select * from regions;
+REGION_ID REGION_NAME
+--------- -------------------------
+1 Europe
+2 Americas
+3 Asia
+4 Middle East and Africa
+
+declare
+  wregion_name_short varchar2(500);
+begin
+  for r1 in (select region_name from regions) loop
+    wregionns_name_short := upper(SUBSTR(t1.regions_name, 1, 2) );
+    dbms_output.put_line(wregion_name_ahort);
+  end loop
+end;
+/
+
+
+declare
+  wsalario varchar2(200);
+begin
+  for r1 in (select ename, sal from emp where comm is null) loop
+    wsalario := 'R$ ' || to_char(r1,sal, 'fm999G990D00');
+    dbms_output.put_line('Nome: ' || r1.ename || 'Salário : ' || wsalario);
+  end loop
+end;
+/
+
+declare
+  valor number;
+begin
+  valor := instr(37462.12,'62');
+  dbms_output.put_line('Posição: ' || valor);
+end;
+/
+
+
+begin
+  for r1 in (select first_name from employees where length(fisrt_name) > 10 ) loop
+    dbms_output,print_line('Nome: ' || r1.fisrt_name);
+  end loop
+end;
+/
+
+declare
+  wlast_name  varchar2(200);
+  wsalary     varchar2(50);
+begin
+  for r1 in (select last_name, salary from employees where department_id = 30) loop
+    wlast_name := rpad(r1.last_name, 12, '++++');
+    wsalary    := lpad(r1.salary, 7, '0');
+    
+    dbms_output.put_line('Último Nome: ' || wlast_name || 'Salário: ' || wsalary);
+  end loop
+end;
+/
+
+# FUNÇÔES DE CÁLCULOS
+ROUND - 
+
