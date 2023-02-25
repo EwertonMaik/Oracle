@@ -1279,5 +1279,84 @@ end;
 /
 
 # FUNÇÔES DE CÁLCULOS
-ROUND - 
+ROUND - Arredonda valores com casas decimais.
+TRUNC - Trunca valores com casas decimais.
+MOD - Mostra o resto da divisão de dois valores.
+SQRT - Retorna a raiz quadrada de um valor.
+POWER - Retorna um valor elevado a outro valor.
+ABS - Retorna o valor absoluto.
+CEIL - Retorna o menor inteiro, maior ou igual a valor.
+FLOOR - Retorna o maior inteiro, menor ou igual a valor.
+SIGN - Se valor maior que o retornar +1. Se valor menor que o retornar -1. Se valor igual a o retornar o.
+
+# ROUND
+declare
+  wsal_calc number;
+  wcomm number;
+begin
+  for r1 in (select sal, ename from emp where deptno = 20) loop
+    wsal_calc := (r1.sal / 2.7);
+    dbms_output.put_line('Nome: ' || r1.ename || 'Salário: ' || wsal_calc);
+  end loop;
+  
+  dbms_output.put_line('-');
+  
+  for r1 in (select comm, ename from emp where comm is not null) loop
+    wcomm := round( (r1.comm / 2.7) );
+    dbms_output.put_line('Nome: ' || r1.ename || 'Comissão: ' || wcomm);
+  end loop;
+  
+  dbms_output.put_line('-');
+  
+  for r1 in (select sal, ename from emp where empno between 7500 and 7700) loop
+    wsal_calc := round( (r1.sal / 2.7), 2 );
+    dbms_output.put_line('Nome: ' || r1.ename || 'Salário: ' || r1.sal || 'Salário Calc: ' || wsal_calc);
+  end loop;
+  
+end;
+/
+
+# TRUNC
+declare
+  wsal_calc number;
+begin
+  for r1 in (select first_name, salary, job_id from employees where job_id = 'MK_MAN') loop
+    wsal_calc := (r1.salary / 2.7);
+    dbms_output.put_line('Nome: ' || r1.first_name || 'Salário Calc.: ' || wsal_calc || ' Salário: ' || r1.salary || ' Job: ' || r1.job_id);
+  end loop;
+  
+  dbms_output.put_line('-');
+  
+  for r1 in (select last_name, salary, email from employees where email = 'NSARCHAN') loop
+    wsal_calc := trunc( (r1.salary / 2.7) );
+    dbms_output.put_line('Nome: ' || r1.last_name || 'Sal. Calc: ' || wsal_calc || ' Sal. : ' || r1.salary || ' Email. : ' || r1.email);
+  end loop;
+  
+  dbms_output.put_line('-');
+  
+  for r1 in (select last_name, salary from employees where employee_id between 100 and 105 ) loop
+    wsal_calc := trunc( (r1.salary / 2.7), 2 );
+    dbms_output.put_line('Nome: ' || r1.last_name || ' Sal. Calc: ' || wsal_calc || ' Sal. : ' || r1.salary);
+  end loop;
+  
+end;
+/
+
+
+# MOD / SQRT / POWER
+declare
+  wres number;
+begin
+  wres := mod(10, 2);
+  dbms_output.put_line('Resultado: ' || wres);
+  
+  wres := sqrt(64);
+  dbms_output.put_line('Resultado : ' || wres);
+  
+  wres := power(8, 2);
+  dbms_output.put_line('Resultado: ' || wres);
+end;
+/
+
+
 
