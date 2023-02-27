@@ -1359,4 +1359,62 @@ end;
 /
 
 
+# ABS / CEIL / FLOOR
+declare
+  wres number;
+begin
+  wres := abs(-20);
+  dbms_output.put_line('Resultado: ' || wres);
+  
+  wres := ceil(10.2);
+  dbms_output.put_line('Resultado: ' || wres);
+  
+  wres := floor(10.2);
+  dbms_output.put_line('Resultado: ' || wres);
+  
+end;
+/
+
+# SIGN
+declare
+  wres number;
+begin
+  sign(-2000);
+  dbms_output.put_line('Resultado: ' || wres);
+  
+  wres := sign(2000);
+  dbms_output.put_line('Resultado: ' || wres);
+  
+  wres := sign(0);
+  dbms_output.put_line('Resultado: ' || wres);
+end;
+/
+
+# Operadores Aritméticos
+* Multiplicação
+/ Divisão
++ Adição
+- Subtração
+
+declare
+  wsal_calc number;
+begin
+  for r1 in (select sal from emp where comm is not null) loop
+    wsal_calc := (r1.sal * 2/3);
+    dbms_output.put_line('Salário Calc.: ' || wsal_calc || 'Salário: ' || r1.sal);
+  end loop;
+end;
+/
+
+
+declare
+  wsal_calc number;
+begin
+  for r1 in (select ename, sal from emp where deptno = 30) loop
+    wsal_calc := round( (r1.sal * 2) / 3 + 100.00 , 2 );
+    dbms_output.put_line('Nome: ' || r1.ename || 'Salário Calc.: ' || wsal_calc || ' Salário: ' r1.sal);
+  end loop;
+end;
+/
+
 
