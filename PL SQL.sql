@@ -1418,3 +1418,81 @@ end;
 /
 
 
+declare
+  wdt_emissao number;
+  wpremiacao number;
+  
+  cursor c1 is select ename, dname, hiredate, sal from emp e, dept d
+               where e.deptno = d.deptno
+               and trunc( (sysdate - hiredate) / 365 ) = 30;
+
+
+## Uso de Funções Aritméticas de Multiplicação / Divisão e Subtração
+begin
+  for r1 in c1 loop
+    wdt_emissao := trunc( (sysdate - r1.hiredate) / 365);
+    wpremiacao := (r1.sal / 10 * trunc((sysdate - r1.hiredate) / 365) );
+    
+    dbms_output.put_line('Nome: ' || r1.ename || 'Dt. Emissão: ' || wdt_emissao || 'Premiação: ' || wpremiacao);
+  end loop;
+end;
+/
+
+## FUNÇÕES DE AGREGAÇÃO
+
+select ename, dname, sal from emp e, dept d where e.deptno = d.deptno order by ename;
+
+# Gera erro
+declare
+  cursor c1 is select ename, dname, SUM(sal) soma_sal from emp e, dept d
+               where e.deptno = d.deptno
+               order by ename;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Nome: ' || r1.ename || 'Departamento: ' || r1.dname || 'Soma Sal.: ' || r1.soma_sal);
+  end loop;
+end;
+/
+
+
+# Erro Corrigido - Porém não agrupado da forma correta ainda.
+declare
+  cursor c1 is select ename, dname, SUM(sal) soma_sal from emp e, dept d
+               where e.deptno = d.deptno
+               group by ename, dname
+               order by ename;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Nome: ' || r1.ename || 'Departamento: ' || r1.dname || 'Soma Sal.: ' || r1.soma_sal);
+  end loop;
+end;
+/
+
+
+# Agrupamanto realizado, porém errado ainda, pois a coluna ename continuou no group by
+declare
+  cursor c1 is select dname, SUM(sal) soma_sal from emp e, dept d
+               where e.deptno = d.deptno
+               group by ename, dname
+               order by ename;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Departamento: ' || r1.dname || 'Soma Sal.: ' || r1.soma_sal);
+  end loop;
+end;
+/
+
+
+# Agrupamento realizado com sucesso
+declare
+  cursor c1 is select dname, SUM(sal) soma_sal from emp e, dept d
+               where e.deptno = d.deptno
+               group by dname;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Departamento: ' || r1.dname || 'Soma Sal.: ' || r1.soma_sal);
+  end loop;
+end;
+/
+
+
