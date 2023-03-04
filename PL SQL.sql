@@ -1495,4 +1495,94 @@ begin
 end;
 /
 
+COUNT - Retorna a quantidade de incidências de registros.
+SUM - Exibe a soma dos valores dos registros.
+AVG - Exibe a média dos valores de uma determinada coluna.
+MIN - Exibe o menor valor de uma coluna.
+MAX - Retorna o maior valor de uma coluna
+
+
+declare
+  cursor c1 is
+    select COUNT(employee_id) cont_emp, country_name
+    from employees e, departments d, locations l, countries c
+    where e.department_id = d.department_id
+    and d.location_id = l.location_id
+    group by country_name
+    order by country_name;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Qtde. Empregados: ' || r1.count_emp || ' Cidade: ' || r1.country_name);
+  end loop;
+end;
+/
+
+
+declare
+  cursor c1 is
+    select count(*) cont_emp, country_name
+    from employees e, departments d, locations l, countries c
+    where e.department_id = d.department_id
+    and d.location_id = l.location_id
+    and l.country_id = c.country_id
+    group by country_name;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Qtde. Empregados: ' || r1.cont_emp || ' Cidade: ' || r1.country_name);
+  end loop;
+end;
+/
+
+
+declare
+  cursor c1 is
+    select dname, MAX(hiredate) dt_adamissão
+    from emp e, dept d
+    where e.deptno = d.deptno
+    group by dname
+    order by 2 desc;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Departamento: ' || r1.dname || 'Dt. Admissão: ' || r1.dt_admissao);
+  end loop;
+end;
+/
+
+
+declare
+  wres date;
+begin
+  select MIN(hire_date) hire_date_min into wres from employees;
+  dbms_output.put_line('Menor Dt. Emissão: ' || wres);
+end;
+/
+
+
+declare
+  cursor c1 is
+    select count(employee_id) cont_emp, SUM(salary) soma_salario, department_name
+    from employees e, departments d
+    where e.department_id = d.department_id
+    having count(employee_id) > 5
+    group by department_name
+    order by department_name;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Qtde. Empregado: ' || r1.cont_emp || ' Soma Sal.: ' || r1.soma_salario || ' Depto.: ' || r1.department_name);
+  end loop;
+end;
+/
+
+
+declare
+  cursor c1 is
+    select department_name, SUM(salary) soma_sal, coutry_name
+    from emploess e, departments d, locations l, countries c
+    where e.department_id = d.department_id
+    and d.location_id = l.location_id
+    and l.country_id = c.country_id
+    havaing sum(salary)
+begin
+end;
+/
 
