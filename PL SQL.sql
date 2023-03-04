@@ -1581,7 +1581,13 @@ declare
     where e.department_id = d.department_id
     and d.location_id = l.location_id
     and l.country_id = c.country_id
-    havaing sum(salary)
+    having sum(salary) > (select avg(em.slary) from employees em, departments dm, locations lm, countries cm
+                          where em.department_id = dm.departmemt_id
+                          and dm.location_id = lm.location_id
+                          and lm.country_id = cm.country_id
+                          and cm.country_id = c.country__id
+     group by c.country_id, department_name, country_name
+     order by country_name, department_name;
 begin
 end;
 /
