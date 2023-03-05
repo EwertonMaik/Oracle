@@ -1589,6 +1589,20 @@ declare
      group by c.country_id, department_name, country_name
      order by country_name, department_name;
 begin
+  for r1 in c1 loop
+    dbms_output.put_line('Departamento: ' || r1.departament_name || 'Soma Sal.: ' || r1.soma_sal || ' Cidade: ' || r1.country_name);
+  end loop;
 end;
 /
+
+# Funções de Data
+add_months - adiciona meses em uma determinada data.
+months_between - Retorna a quantidade de meses entre duas datas.
+next_day - Procura o proximo dia após uma data informada.
+last_day - Retorna o último dia do mês com base em uma data informada.
+trunc - trunca uma data passada por parâmetro. O trunc pode ser feito por dia e mês, utilizando o parâmetro FMT (formato).
+
+
+
+
 
