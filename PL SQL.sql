@@ -1601,8 +1601,79 @@ months_between - Retorna a quantidade de meses entre duas datas.
 next_day - Procura o proximo dia após uma data informada.
 last_day - Retorna o último dia do mês com base em uma data informada.
 trunc - trunca uma data passada por parâmetro. O trunc pode ser feito por dia e mês, utilizando o parâmetro FMT (formato).
+sysdate - Retorna a data corrente com base no servidor do banco de dados.
+sessiontimezone
+current_date
 
 
+declare
+  wdt_admissao date;
+  wsexta date;
 
+  cursor c1 is select first_name, hire_date from employees where to_char(hire_date, 'mm') = to_char(sysdate, 'mm') order by 2;
+begin
+  for r1 in c1 loop
+    wdt_admissao := to_date( to_char(r1.hire_date, 'dd/mm') || '/' || to_char(sysdate, 'rrrr'), 'dd/mm/rrrr' );
+    wsexta := next_day( to_date(to_char(r1.hire_date, 'dd/mm') || '/' || to_char(sysdate, 'rrrr'), 'dd/mm/rrrr'), 'FRIDAY');
+    dbms_output.put_line('Nome: ' || r1.first_name || 'Dt. Admissão: ' || wdt_admissao || ' Sexta de Folga: ' || wsexta);
+  end loop;
+end;
+/
+
+declare
+  wdt_termino_exp date;
+  wdt_meses_trabalho number;
+
+  cursor c1 is select ename, dname, hiredate from emp e, dept d where e.deptno = d.petno and add_months(hiredate, 350) >= sysdate;
+begin
+  for r1 in c1 loop
+    wdt_termino_exp := add_months(r1.hiredate, 3);
+    wqt_meses_trabalho := to_char(months_between(sysdate, r1.hiredate), '990D00' );
+    dbms_output.put_line('Nome: ' || r1.ename || ' ' || 'Depto: ' || r1.dname || ' ' || 'Dt. Admissão: ' || r1.hiredate || ' ' || 'Término Exp.: ' || wdt_termino_exp || ' ' || 'Qtde. Meses Trab.: ' || wqt_meses_trabalho);
+  end loop;
+end;
+/
+
+
+declare
+  wsessiomtimezone varchar(10);
+  wcurrrent_date date;
+  wsysdate date;
+begin
+  wsessiontimezone := sessiontimezone;
+  wcurrent_date := current_date;
+  wsysdate := sysdate;
+  dbms_output.put_line('Fuso Horário: ' || wsessiontimezone || ' ' || 'Data Corrente: ' || wcurrent_date || ' ' || 'Data Atual: ' || wsysdate);
+end;
+/
+
+declare
+  wlast date;
+  wround date;
+  wtrunc date;
+  
+  cursor c1 is select ename, hiredate from emp where deptno = 20;
+begin
+  for r1 in c1 loop
+    wlast := last_day(r1.hiredate);
+    wround := round(r1.hiredate, 'YEAR');
+    wtrunc := trunc(r1.hiredate, 'YEAR');
+
+    dbms_output.put_line(
+      'Nome: ' || r1.ename || ' ' ||
+      'Dt. Admissão: ' r1.hiredate || ' ' ||
+      'Último dia Mês Admissão: ' || wlast || ' ' ||
+      'Arredonda Ano Admissão.: ' || wround || ' ' ||
+      'Trunc Ano Admissão: ' || wtrunc
+    );
+  end loop;
+end;
+/
+
+
+# Funções de Conversão
+to_date - Converte uma String (char ou varchar2) de caractere para uma data;
+to_number - Converte uma String (char ou varchar2) de caractere para um número;
+to_char - Converte um número ou uma data para uma string de caractere
 
 
