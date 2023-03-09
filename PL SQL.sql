@@ -1676,4 +1676,57 @@ to_date - Converte uma String (char ou varchar2) de caractere para uma data;
 to_number - Converte uma String (char ou varchar2) de caractere para um número;
 to_char - Converte um número ou uma data para uma string de caractere
 
+-- Exemplo que Obtêm ERRO
+declare
+  wdata date;
+begin
+  wdata := to_date('21/05/2009', 'dd/mm');
+  wdata := to_date('21/05', 'dd/mm/yyyy');
+end;
+/
+
+-- Exemplo to_date
+begin
+  for r1 in (select ename, hiredate from emp where hiredate > to_date('010182','ddmmrr') ) loop
+    dbms_output.put_line('Empregado: ' || r1.ename || ' - Data de Admissão: ' || r1.hiredate);
+  end loop;
+end;
+/
+
+
+declare
+  wdate date;
+begin
+  wdate := to_date('21.05.2009', 'dd.mm.yyyy');
+  dbms_output.put_line('Data: ' || wdate);
+end;
+/
+
+
+declare
+  wdate date;
+begin
+  wdate := to_date('April 21', 'month dd', 'nls_date_language = american');
+  dbms_output.put_line('Data: ' || wdate);
+end;
+/
+
+
+declare
+  wdate date;
+begin
+  wdate := to_date('Abril 21', 'month dd', 'nls_date_language=''BRAZILIAN PORTUGUESE''');
+  dbms_output.put_line('Data: ' || wdate);
+end;
+/
+
+declare
+  wdate daye;
+begin
+  wdate := to_date('Abril 21', 'month xx', 'nls_date_language =''BRAZILIAN PORTUGUESE''' );
+  dbms_output.put_line('Data: ' || wdate);
+end;
+/
+
+
 
