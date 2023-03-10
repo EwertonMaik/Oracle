@@ -1729,4 +1729,40 @@ end;
 /
 
 
+declare
+  wdate date;
+begin
+  wdate := to_date('2008','yyyy');
+  dbms_output.put_line('Data: ' || wdate);
+  
+  wdate := to_date(200,'ddd');
+  dbms_output.put_line('Data: ' || wdate);
+end;
+/
+
+
+declare
+  wdate varchar(50);
+begin
+  wdate := to_char(sydate, 'dd/mm/yyyy');
+  dbms_output.put_line('Data: ' || wdate);
+
+  wdate := to_char( to_char('01/01/49', 'dd/mm/yyyy'), 'dd//mm/yyyy' );
+  dbms_output.put_line('Data: ' || wdate);
+
+  wdate := to_char( to_char('01/01/50', 'dd/mm/yy'), 'dd/mm/yyyy' );
+  dbms_output.put_line('Data: ' || wdate);
+  
+  wdate := to_char( to_char('01/01/49', 'dd/mm/rr'), 'dd/mm/rrrr' );
+  dbms_output.put_line('Data: ' || wdate);
+  
+  wdate := to_char( to_char('01/01/50', 'dd/mm/rr'), 'dd/mm/rrrr' );
+  dbms_output.put_line('Data: ' || wdate);
+  
+end;
+/
+
+
+
+
 
