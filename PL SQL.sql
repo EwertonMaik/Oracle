@@ -1763,6 +1763,30 @@ end;
 /
 
 
+--Obtêm ERRo por conta na conversão por conta da pontuação
+declare
+  wvalor number;
+begin
+  wvalor := to_number('4.569.900,87'); -- ERRO
+  dbms_output.put_line('Valor: ' || wvalor);
+
+  wvalor := to_number('4,569,900.87'); -- ERRO
+  dbms_output.put_line('Valor: ' || wvalor);
+
+  wvalor := to_number('4.569.900,87', '9G999G999D00'); -- ERRO
+  dbms_output.put_line('Valor: ' || wvalor);
+
+  wvalor := to_number('4,569,900.87', '9G999G999D00'); -- Funcionou Pois nesta sessão Oracle, esta definido como casa decimal o ponto, e não virgula.
+  dbms_output.put_line('Valor: ' || wvalor);
+end;
+/
+
+-- Alterando apenas na Sessão - O parâmetro de separador de casa decimal e centena
+alter session set nls_numeric_characters = '.,';
+alter session set nls_language = 'BRAZILIAN PORTUGUESE';
+alter session set nls_date_language = 'PORTUGUESE';
+alter session set nls_date_format = 'DD/MM/RRRR';
+
 
 
 
