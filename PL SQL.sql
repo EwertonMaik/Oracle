@@ -1787,6 +1787,68 @@ alter session set nls_language = 'BRAZILIAN PORTUGUESE';
 alter session set nls_date_language = 'PORTUGUESE';
 alter session set nls_date_format = 'DD/MM/RRRR';
 
+declare
+  wvalor number;
+begin
+  wvalor := to_number('4,569,900.87','9G999G999D00');
+  dbms_output.put_line('Valor: ' || wvalor);
+end;
+/
 
+
+alter session set nls_numeric_characters = '.,';
+
+declare
+  wvalor number;
+begin
+  wvalor := to_number('4.569.900,87','9G999G999D00');
+  dbms_output.put_line('Valor: ' || wvalor);
+end;
+/
+
+declare
+  wvalor number;
+begin
+  wvalor := to_number('4.569.900,87', '9G999G999D00', 'nls_numeric_characters =,.');
+  dbms_output.put_line('Valor: ' || wvalor);
+end;
+/
+
+# TO_DATE
+declare
+  wdate date;
+begin
+  wdate := to_date('02-APR-81'); -- Utilizando to_date sem definir uma formato / mascara
+  dbms_output.put_line('Data: ' || wdate);
+end;
+/
+
+
+declare
+  wfate date;
+begin
+  wdate := to_date('05/21/2009'); -- Obtêm EEOO
+  dbms_output.put_line('Data: ' || wdate);
+end;
+/
+
+declare
+  wdate date;
+begin
+  wdate := to_date('05/21/2009', 'mm/dd/yyyy');
+  dbms_output.put_line('Data: ' || wdate);
+end;
+/
+
+# TO_CHAR
+declare
+  wsal varchar2(50);
+begin
+  for r1 in (select ename, sal from emp) loop
+    wsal := to_char(r1.sal, '9G999G999D00', 'nls_numeric_characters = '','' ');
+    dbms_output.put_line('Nome: ' || r1.ename || ' Salário: ' || wsal);
+  end loop;
+end;
+/
 
 
