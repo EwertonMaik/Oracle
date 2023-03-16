@@ -1913,5 +1913,81 @@ begin
 end;
 /
 
+declare
+  wpositivo varchar2(100);
+  wnegativo varchar2(100);
+begin
+  wpositivo := to_char(174984283.75,'fm999,999,999.00S');
+  wnegativo := to_char(100-1000,'fm999,999,999.00S');
+  dbms_output.put_line('Positivo: ' || wpositivo || ' - Negativo: ' || wnegativo);
+end;
+/
+
+
+# Capítulo 15 - Funções Condicionais
+DECODE
+NULLIF
+NVL
+CASE
+GREATEST
+LEAST
+
+# CASE - PADRÃO SQL ANSI
+declare
+  cursor c1 is
+  select  job,
+          SUM(CASE WHEN deptno = 10 THEN sal ELSE 0 END)  depart_10,
+          SUM(CASE WHEN deptno = 20 THEN sal ELSE 0 END)  depart_20,
+          SUM(CASE WHEN deptno = 30 THEN sal ELSE 0 END)  depart_30,
+          SUM(sal)  total_job
+  from    emp
+  group by job;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line(r1.job || ' - Depart. 10: ' || r1.depart_10 || ' - Depart. 20: ' || r1.depart_20 || ' - Depart. 30: ' || r1.depart_30 || ' - Total: ' || r1.total_job);
+  end loop;
+end;
+/
+
+# DECODE - PADRÃO ORACLE
+declare
+  cursor c1 is
+  select  job,
+          SUM( DECODE(deptno, 10, sal, 0) )  depart_10,
+          SUM( DECODE(deptno, 20, sal, 0) )  depart_20,
+          SUM( DECODE(deptno, 30, sal, 0) )  depart_30,
+          SUM(sal)  total_job
+  from    emp
+  group by job;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line(r1.job || ' - Depart. 10: ' || r1.depart_10 || ' - Depart. 20: ' || r1.depart_20 || ' - Depart. 30: ' || r1.depart_30 || ' - Total: ' || r1.total_job);
+  end loop;
+end;
+/
+
+
+# NVL
+declare
+  wsal_comm1 number;
+  wsal_comm2 number;
+begin
+  select sum(sal + comm) into wsal_comm1 from emp;
+  select sum(sal + nvl(comm, 0) ) into wsal_comm2 from emp;
+  dbms_output.put_line('Sal. Comm1: ' || wsal_comm1 || ' - Sal. Comm2: ' || wsal_comm2);
+end;
+/
+
+
+# GREATEST & LEAST
+declare
+  wmaior_letra varchar2(1);
+  wmenor_letra varchar2(1);
+begin
+  select greatest('b','x','t','u','a') into wmaior_letra from dual;
+  select least('b','x','t','u','a') into wmenor_letra from dual;
+  dbms_output.put_line('Maior Letra: ' || wmaior_letra || 'Menor Letra: ' || wmenor_letra);
+end;
+/
 
 
