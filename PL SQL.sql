@@ -1852,3 +1852,66 @@ end;
 /
 
 
+begin
+  for r1 in (select count(*) qt_admitidos, to_char(hiredate, 'mm') MES from emp group by to_char(hiredate, 'mm') ) loop
+    dbms_output.put_line('Admitidos: ' || r1.qt_admitidos || 'Mês: ' || r1.mes);
+  end loop;
+end;
+/
+
+declare
+  wdata_extenso varchar2(100);
+begin
+  wdata_extendo := '22 de agosto de 2009 será dia ' || to_char(to_date('22/08/2009', 'dd/mm/yyyy'), 'ddd' ) || ' do ano';
+  dbms_output.put_line(wdata_extenso);
+end;
+/
+
+declare
+  wdia_semana varchar2(50);
+begin
+  for r1 in (selecct ename, hiredate from emp) loop
+    wdia_semana := to_char(r1.hiredate, 'day');
+    dbms_output.put_line('nome: ' || r1.ename || ' Admissão: ' || r1.hiredate || ' Dia da Semana ' || wdia_semana);  
+  end loop;
+end;
+/
+
+
+declare
+  wdata_extenso varchar2(100);
+begin
+  wdata-extenso := 'Joinville, ' || to_char(sysdate, 'dd') || ' de ' || initcap( to_char(sysdate, 'fmmonth') ) || ' de ' || to_char(sysdate, 'yyyy') || '.';
+  dbms_output.put_line(wdata_extenso);
+end;
+/
+
+begin
+  for r1 in (select ename, hiredate from emp where to_char(hiredate, 'yyyy') = '1982' ) loop
+    dbms_output.put_line('Nome: ' || r1.ename || ' Admissão: ' || r1.hiredate);
+  end loop;
+end;
+/
+
+declare
+  wsal_formato varchar2(100);
+begin
+  for r1 in (select sal from emp) loop
+    wsal_formatado := 'R$' || to_char( r1.sal, 'fm9G999G990D00');
+    dbms_output.put_line('Salario ' || r1.sal || 'Salário Formatada: ' || wsal_formato);
+  end loop;
+emn;
+
+
+declare
+  wsal_formatado varchar2(50);
+begin
+  for r1 in (select sal from emp) loop
+    wsal_formatado := to_char( r1.sal, 'fmL9G999G990D00' );
+    dbms_output.put_line('Salário : ' || r1.sal || 'Salário Formatado: ' || wsal_formatado)
+  end loop;
+end;
+/
+
+
+
