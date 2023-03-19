@@ -1991,3 +1991,122 @@ end;
 /
 
 
+# DECORE / NULLIF
+declare
+  comparacao1 varchar2(100);
+  comparacao2 varchar2(100);
+begin
+  select decode( nullif('abacaxi', 'abacaxi'), null, 'são iguais', 'são diferentes' ) into comparacao1 from dual;
+  select decode( nullif('abacaxi', 'morango'), null, 'são iguais', 'são diferentes' ) into comparacao2 from dual;
+dbms_output.put_line('Comparação 1: ' || comparacao1 || ' - Comparação 2: ' || comparação2);
+end;
+/
+
+# DECODE x CASE
+declare
+  cursor c1 is
+    select  job,
+            sum(case when deptno = 10 then sal else 0 end)  depart_10,
+            sum(case when deptno = 20 then sal else 0 end)  depart_20,
+            sum(case when deptno = 30 then sal else 0 end)  depart_30,
+            sum(sal)  total_job
+    from emp
+    group by job;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line(r1.job || ' - Depart. 10: ' || r1.depart_10 || ' - Depart. 20: ' || r1.depart_20 || ' - Depart. 30: ' || r1.depart_30 || ' - Total: ' r1.total_job);
+  end loop;
+end;
+/
+
+declare
+  cursor c1 is
+    select  job,
+            sum( decode(deptno, 10, sal, 0) ) depart_10,
+            sum( decode(deptno, 20, sal, 0) ) depart_20,
+            sum( decode(deptno, 30, sal, 0) ) depart_30,
+            sum( sal ) total_job
+    from    emp
+    group by job
+begin
+  for r1 in c1 loop
+    dbms_output.put_line(r1.job || ' - Depart. 10: ' || r1.depart_10 || ' - Depart. 20: ' || r1.depart_20 || ' - Depart. 30: ' || r1.depart_30 || ' - Total: ' r1.total_job);
+  end loop;
+end;
+/
+
+
+declare
+  cursor c1 is
+    select    ename,
+              job,
+              mgr,
+              case
+                    when mrg = 7902 then 'MENSALISTA'
+                    when mgr = 7902 then 'MENSALISTA'
+                    when mgr = 7839 then 'COMISSIONADO'
+                    when mgr = 7566 then 'MENSAL/HORISTA'
+              else
+                    'OUTROS'
+              end   tipo
+      from    emp;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Nome: ' || r1.ename || ' - Cargo: ' || r1.job || ' - Gerente: ' || r1.mgr || ' - Tipo: ' || r1.tipo);
+  end loop;
+end;
+/
+
+
+declare
+  cursor c1 is
+      select    ename,
+                job,
+                mgr,
+                decode( mgr, 7902, 'MENSALISTA', 7839, 'COMISSIONADO', 7566, 'MENSAL/HORISTA', 'OUTROS' ) tipo
+      from      emp;
+begin
+  for r1 in c1 loop
+    dbms_output.put_line('Nome: ' || r1.ename || ' - Cargo: ' || r1.job || ' - Gerente: ' || r1.mgr || ' - Tipo: ' || r1.tipo);
+  end loop;
+end;
+/
+
+
+# Programas Armazenados - (PROCEDURES / FUNCTIONS / PACKAGES)
+
+create procedure calc is
+  x1 number := 10;
+  x2 number := 5;
+  op varchar2(1) := '+';
+  res number;
+begin
+  if (x1 + x2) = 0 then
+    dnms_output.put_line('Resultado: 0');
+  elsif op = '*' then
+    res := x1 * x2;
+  elsif op = '/' then
+    if x2 = 0 then
+      dbms_output.put_line('Erro de divisão por zero|');
+    else
+      res := x1 / x2;
+    end if;
+  elsif op = '-' then
+    res := x1 - x2;
+    if res = 0 then
+      dbms_output.put_line('Resultado igual a zero!');
+    elsif res < 0 then
+      dbms_output.put_line('Resultado menor que zero!');
+    elsif res > 0 then
+      dbms_output.put_line('Resultado maior que zero!');
+    end if;
+  elsif op = '+' then
+    res := x1 + x2;
+  else
+    dbms_output.put_line('Operador Inválido!');
+  end if;
+    dbms_output.put_line('Resultado do cálculo: ' || res);
+end;
+/
+
+
