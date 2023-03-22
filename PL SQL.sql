@@ -2109,4 +2109,49 @@ begin
 end;
 /
 
+-- ## FUNCTIONS
+create function valida_cpf return varchar2 is
+  m_total   number  default 0;
+  m_digito  number  default 0;
+  cpf       varchar2(50)  default '02411848430';
+begin
+  for i in 1..9 loop
+    m_total := m_total + substr(cpf, i, 1) * (11 - 1)
+  end loop;
+
+  m_digito := 11 - mod(m_total, 11);
+  
+  if m_digito > 9 then
+    m_digito := 0;
+  end if;
+  
+  if m_digito != substr(cpf, 10, 1) then
+    return 'I';
+  end if;
+  
+  m_digito := 0;
+  m_total := 0;
+
+  for i in 1..10 loop
+    m_total := m_total + substr(cpf, i, 1) * (12 - i)
+  end loop;
+  
+  m_digito := 11 - mod(m_total, 11);
+
+  if m_digito > 9 then
+    m_digito := 0;
+  end if;
+  
+  if m_digito != substr(cpf, 11, 1) then
+    return 'I';
+  end if;
+  
+  return 'V';
+  
+end valida_cpf;
+/
+
+
+
+
 
