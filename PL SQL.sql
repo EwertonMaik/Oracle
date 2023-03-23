@@ -2152,6 +2152,122 @@ end valida_cpf;
 /
 
 
+declare
+	procedure calc is
+		x1	number := 10;
+		x2	number := 5;
+		op	varchar2(1) : '+';
+		res	number;
+	begin
+		if (x1 + x2) = 0 then
+			dbms_output.put_line('Resultado: 0');
+		elsif op = '*' then
+			res := x1 * x2;
+		elsif op = '/' then
+			if x2 = 0 then
+				dbms_output.put_line('Erro de divisão por zero!');
+			else
+				res := x1 / x2;
+			end if;
+		elsif op = '-' then
+			res := x1 - x2;
+			if res = 0 then
+				dbms_output.put_line('Resultado igual a zero!');
+			elsif res < 0 then
+				dbms_output.put_line('Resultado menor que zero!');
+			elsif res > 0 then
+				dbms_output.put_line('Resultado maior que zero!');
+			end if;
+		elsif op = '+' then
+			res := x1 + x2;
+		else
+			dbms_output.put_line('Operador inválido!');
+		end if;
+		dbms_output.put_line('Resultado do cálculo: ' || res);
+	end;
+	
+	begin
+		calc;
+	end;
+	/
 
+
+declare
+	res varchar2(1) default null;
+	
+	function valida_cpf return varchar2 is
+		m_total	number 	default 0;
+		m_digito number default 0;
+		cpf varchar2(50) default '02411848430';
+	begin
+		for i in 1..9 loop
+			m_total := m_total + substr(cpf, i, 1) * (11 - i);
+		end loop;
+		
+		m_digito := 11 - mod(m_total, 11);
+
+		if m_digito > 9 then
+			m_digito := 0;
+		end if;
+		
+		if m_digito != substr(cpf, 10, 1) then
+			return 'I';
+		end if;
+		
+		m_digito := 0;
+		m_total := 0;
+		
+		for i in 1..10 loop
+			m_total := m_total + substr(cpf, i, 1) * (12 - i);
+		end loop;
+		
+		m_digito := 11 - mod(m_total, 11);
+		
+		if m_digito > 9 then
+			m_digito := 0;
+		end if;
+		
+		if m_digito != substr(cpf, 11, 1) then
+			return 'I';
+		end if;
+		
+		return 'V';
+
+	end valida_cpf;
+	
+	begin
+		res := valida_cpf;
+		
+		if res = 'V' then
+			dbms_output.put_line('CPF válido');
+		else
+			dbms_output.put_line('CPF inválido');
+		end if;
+	end;
+	/
+
+-- Exemplos de chamada de Função
+execute calc;
+
+begin
+	calc;
+end;
+/
+
+
+declare
+	res varchar2(1) default null;
+begin
+	res := valida_cpf;
+	if res = 'V' then
+		dbms_output.put_line('CPF válido');
+	else
+		dbms_output.put_line('CPF inválido');
+	end if;
+end;
+/
+
+
+select decode(valida_cpf, 'V', 'Válido', 'Inválido') CPF from dual;
 
 
