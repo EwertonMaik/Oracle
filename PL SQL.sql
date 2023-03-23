@@ -2271,3 +2271,152 @@ end;
 select decode(valida_cpf, 'V', 'Válido', 'Inválido') CPF from dual;
 
 
+			  
+			  -- Concedendo acesso a procedures e functions
+
+grant execute on calc to public;
+grant execute on valida_cpf to TSQL2;
+
+Sinônimos - Alias para o Objeto
+create public synonym calc_valores for tsql.calc;
+create synonym tsql2.valida_cpf for tsql.valida_cpf;
+
+-- REPLACE
+
+create or replace procedure calc is
+	x1	number := 10;
+	x2 	number := 5;
+	op	varchar2(1) := '+';
+	res	number;
+begin
+	if (x1 + x2) = 0 then
+		dbms_output.put_line('Resultado: 0');
+	elsif op = '*' then
+		res := x1 * x2;
+	elsif op = '/' then
+		if x2 = 0 then
+			dbms_output.put_line('Erro de divisão por zero!');
+		else
+			res := x1 / x2;
+		end if;
+	elsif op = '-' then
+		res := x1 - x2;
+		if res = 0 then
+			dbms_output.put_line('Resultado igual a zero!');
+		elsif res < 0 then
+			dbms_output.put_line('Resultado menor que zero!');
+		elsif res > 0 then
+			dbms_output.put_line('Resultado maior que zero!');
+		end if;
+	elsif op = '+' then
+		res := x1 + x2;
+	else
+		dbms_output.put_line('Operador Inválido!');
+	end if;
+	dbms_output.put_line('Resultado do cálculo: ' || res);
+end;
+/
+
+-- ## Recompilando programas armazenados
+
+alter procedure calc compile;
+alter function valida_cpf compile;
+
+-- ## Catálogo de Dados - recuperando Informações
+user_objects, all_objects e dba_objects -- Informações gerais e status dos objetos do banco
+
+select
+	owner,
+	object_type,
+	status,
+	created,
+	last_ddl_time
+from 	all_objects
+where
+	object_name = 'CALC';
+
+desc ou describe
+
+desc CALC
+
+-- ## Recuperando códigos de Objetos do banco
+user_source, all_source ou dba_source
+
+column text format a100
+set pages 1000
+select line, text from all_source where name = 'CALC';
+
+-- ## Visualizando ERROS de compilação
+show error
+user_erros, all_errors, dba_erros
+
+select
+	line,
+	position,
+	text
+from	user_erros
+where	name = 'CALC';
+
+-- ## Passando parâmetros
+Tipos = IN / OUT / IN OUT
+Quanto o tipo não é definido, o padrão é IN.
+IN = Entrada
+OUT = Saída
+IN OUT = Entrada e Saída
+
+procedure exemplo (param1 in number, param2 out number, param3 in out number) is
+	x number;
+	y number;
+	z number;
+begin
+	x := param1; -- uso correto
+	param1 := x; -- uso incorreto
+	
+	y := param2; -- uso incorreto
+	param2 := y; -- uso correto
+	
+	z := param3; -- uso correto
+	param3 := z; -- uso correto
+end;
+/
+
+
+create or replace calc(x1 in number, x2 in number, op in varchar2, res out varchar2) is
+begin
+	if (x1 + x2) = 0 then
+ 		res := 0;
+ 	elsif op = '*' then
+ 		res := x1 * x2;
+ 	elsif op = '/' then
+ 		if x2 = 0 then
+ 			res := 'Erro de divisão por zero!';
+ 		else
+ 			res := x1 / x2;
+ 		end if;
+ 	elsif op = '-' then
+ 		res := x1 - x2;
+ 		if res = 0 then
+ 			res := 'Resultado igual a zero: '||res;
+ 		elsif res < 0 then
+ 			res := 'Resultado menor que zero: '||res;
+ 		elsif res > 0 then
+ 			res := 'Resultado maior que zero: '||res;
+ 		end if;
+ 	elsif op = '+' then
+ 		res := x1 + x2;
+ 	else
+ 		res := 'Operador inválido!';
+	end if;
+end;
+/
+
+declare
+	wres varchar2(100);
+begin
+	calc(x1 => 10, x2 => 5, op => '*', res => wres);
+	dbms_output.put_line('Resultado Calc 1: '||wres);
+
+	calc( 10 ,5 ,'/' ,wres);
+	dbms_output.put_line('Resultado Calc 2: '||wres);
+end;
+/
