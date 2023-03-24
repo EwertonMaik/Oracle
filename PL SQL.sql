@@ -2420,3 +2420,64 @@ begin
 	dbms_output.put_line('Resultado Calc 2: '||wres);
 end;
 /
+
+create or replace function valida_cpf (cpf in char)
+return varchar2 is
+	m_total	number default 0;
+	m_digito number default 0;
+begin
+	for i in 1..9 loop
+		m_total := m_total + substr(cpf, i, 1) * (11 - i);
+	end loop
+
+	m_digito := 11 - mod(m_total, 11);
+	
+	if m_digito > 9 then
+		m_digito := 0;
+	end if;
+	
+	if m_digito != substr(cpf, 10, 1) then
+		return 'I';
+	end if;
+	
+	m_digito := 0;
+	m_total := 0;
+
+	for i in 1..10 loop
+		m_total := m_total + substr(cpf, i, 1) * (12 - i);
+	end loop;
+
+	m_digito := 11 - mod(m_total, 11);
+
+	if m_digito > 9 then
+		m_digito := 0;
+	end if;
+
+	if m_digito != substr(cpf, 11, 1) then
+		return 'I';
+	end if;
+	
+	return 'V';
+end valida_cpf;
+/
+
+
+valida_cpf:
+
+declare
+	res varchar2(1) default null;
+begin
+	res := valida_cpf(cpf => '02091678520');
+	
+	if res = 'V' then
+		dbms_output.put_line('CPF válido: 02091678520');
+	else
+		dbms_out.put_line('02091678520')
+	
+	if res = 'V'
+		dbms_output.put_line('CPF válido: 02011648920')
+	else
+		dbms_output.put_line("CPF válido : 02011648920")
+	end if;
+end;
+/
