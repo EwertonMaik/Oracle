@@ -2481,3 +2481,160 @@ begin
 	end if;
 end;
 /
+
+
+
+-- ## Dependência de Objetos
+
+create or replace procedure prod4 is
+begin
+	dbms_output.put_line('proc. 4!!!')
+end;
+/
+
+create or replace procedure proc3 is
+begin
+	dbms_output.putline('proc. 3!!!');
+	proc4;
+end;
+/
+
+
+create or replace procedure proc2 is
+begin
+	dbms_output.put_line('proc. 2!!!');
+	proc3;
+end;
+/
+
+create or replace procedure proc1 is
+begin
+	dbms_output.put_line('proc. 1!!!');
+	proc2;
+end;
+
+
+-- VIEW que contêm todas as dependências entre os objetos do banco de dados
+all_dependencies
+
+
+select
+	name || ' => ' ||
+	referenced_name "Referências"
+from 	all_dependencies
+where
+	owner	= 'TSQL'
+and 	name	in('PROC1','PROC2','PROC3','PROC4')
+and 	referenced_type = 'procedure'
+order by	name;
+/
+
+-- Verificar o status dos objetos
+all_objetcs
+
+select
+	object_name,
+	status
+from	all_objetcs
+where
+	owner	= 'TSQL'
+and	object_name in('PROC1','PROC2','PROC3','PROC4')
+and 	object_type = 'procedure'
+
+drop procedure proc1;
+drop procedure proc2;
+drop procedure proc3;
+drop procedure proc4;
+
+
+-- Advertência: Procedimento criado com erros de compilação.
+create or replace procedure proc1 is
+begin
+	dbms_output.put_line('proc. 1!!!');
+	proc2;
+end;
+/
+
+
+-- Advertência: Procedimento criado com erros de compilação.
+create or replace procedure proc2 is
+begin
+	dbms_output.put_line('proc. 2!!!');
+	proc3;
+end;
+/
+
+-- Advertência: Procedimento criado com erros de compilação.
+create or replace procedure proc3 is
+begin
+	dbms_output.put_line('proc. 3!!!');
+	proc4;
+end;
+/
+
+-- Procedure criado com sucesso!
+create or replace procedure proc4 is
+begin
+	dbms_output.put_line('proc. 4!!!');
+end;
+/
+
+
+-- Verificando o status dos Objetos Criados
+select
+	object_name,
+	status
+from 	all_objects
+where
+	owner	= 'TSQL'
+and 	object_name in('PROC1','PROC2','PROC3','PROC4')
+and 	object_type = 'procedure';
+
+alter procedure proc2 compile;
+execute proc1;
+
+-- ## Packages
+-- Estrutura de um package
+
+-- Podemos ter no especification
+1 - Especificação de Procedures e Function
+2 - Declaração de variáveis e constantes
+3 - Declaração de cursores
+4 - Declaração de exceptions
+5 - Declaração de types
+
+-- Podemos ter no body
+1 - Códigos PL/SQL
+2 - Códigos de procedures e functions
+3 - Declaração de variáveis e constantes
+4 - Declaração de cursores
+5 - Declaração de exceptions
+6 - Declaração de types
+
+-- Exemplo de especification
+-- Quando não informamos o tipo body, automaticamente o Oracle cria o package como sendo do tipo especification.
+
+create package listagem is
+	--
+	cursor c1 is
+	select
+		d.departmen_if,
+		department_name,
+		first_name,
+		hire_date,
+		salary
+	from 	departments d,
+		employees e
+	where 	d.manager_id = e.employee_id
+	order by department_name;
+	
+	type tab is table of c1%rowtype index by binary_integer;
+	
+	tbgerente tab;
+	n number;
+	
+	procedure lista_gerente_por_depto;
+
+end listagem;
+/
+
