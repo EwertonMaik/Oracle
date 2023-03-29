@@ -2638,3 +2638,75 @@ create package listagem is
 end listagem;
 /
 
+create package body listagem is
+	procedure lista_gerente_por_depto is
+	begin
+		for r1 in c1 loop
+			tbgerente(r1.department_id) := r1;
+		end loop;
+		
+		n := tbgerente.first;
+		
+		while n <= tbgerente.last loop
+			dbms_output.put_line('Depto: ' || tbgerente(n).department_name || ' ' ||
+					     'Gerente: ' || tbgerente(n).first_name || ' ' ||
+					     'Dt. Admi.: ' || tbgerente(n).hire_date || ' ' ||
+					     'Sal.: ' || to_char(tbgerente(n).salary, 'fm$999g999g990d00') );
+			n := tbgerente.next(n);
+		end loop;
+	end lista_gerente_por_depto;
+end listagem;
+
+
+create package calculo as
+	function soma(x1 number, x2 number) return number;
+	function subtrai(x1 number3 x2 number) return number;
+	function multiplica(x1 number, x2 number) return number;
+	function divide(x1 number, x2 number) return number;
+end calculo;
+/
+
+create package body calculo as
+	res number;
+	procedure imprime_msg(msg varchar2) is
+	begin
+		dbms_output.put_line(msg);
+	end;
+
+	function soma(x1 number, x2 number) return number is
+	begin
+		res := x1 + x2;
+		return res;
+	end;
+	
+	function subtrai(x1 number, x2 number) return number is
+	begin
+		res := x1 - x2;
+		if res = 0 then
+			imprime_msg('Resultado igual a zero: ' || res);
+		elsif res < 0 then
+			imprime_msg('Resultado menor que zero: ' || res);
+		elsif res > 0 then
+			imprime_msg('Resultado maior que zero: ' || res);
+		end if;
+		return res;
+	end;
+
+	function multiplica(x1 number, x2 number) return number is
+	begin
+		res := x1 * x2;
+		return res;
+	end;
+
+	function divide(x1 number, x2 number) return number is
+	begin
+		if x2 = 0 then
+			res := null;
+			imprime_msg('Erro de divisão por zero!');
+		else
+			res := x1 / x2;
+		end if;
+		return res;
+	end;
+end calculo;
+/
