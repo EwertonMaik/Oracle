@@ -2710,3 +2710,200 @@ create package body calculo as
 	end;
 end calculo;
 /
+
+
+-- ## Executando o package calculo
+declare
+	res number;
+begin
+	res := calculo.soma(450, 550);
+	dbms_output.put_line('450 + 550 = ' || res)
+end;
+/
+
+
+declare
+	res number;
+begin
+	res := calculo.subtrai(350, 650);
+	dbms_output.put_line('350 - 650 = ' || res);
+end;
+/
+
+
+declare
+	res number;
+begin
+	res:= calculo.multiplica(20, 10);
+	dbms_output.put_line('20 * 10 = ' || res);
+end;
+/
+
+
+declare
+	res number;
+begin
+	res := calculo.divide(50, 5);
+	dbms_output.put_line('50 / 5 = ' || res);
+end;
+/
+
+
+-- Erro - Tentando acessar objeto fora do Escopo
+declare
+	res number;
+begin
+	res := calculo.divide(50, 5);
+	calculo.imprime_msg('50 / 5 = ' || res);
+end;
+/
+
+begin
+	calculo.res := calculo.divide(50, 5);
+	dbms_output.put_line('50 / 5 = ' || calculo.res);
+end;
+/
+
+-- ## Recompilando Packages
+alter package listagem compile;
+
+-- ## Recuperando Informações - Status de Criação de Objetos
+VIEW's user_objects, all_objetcs ou dba_objects
+
+select
+	owner,
+	object_type,
+	status,
+	created,
+	last_ddl_time
+from	all_objects
+where
+	object_name = 'listagem'
+
+-- Usando o comando DESCRIBE
+desc listagem
+
+-- ## Recuperando Códigos
+VIEW's - user_source, all_source ou dba_source
+
+column text format a300
+set lines 1000
+set pages 1000
+
+select
+	lines,
+	text
+from	all_source
+where
+	name = 'listagem';
+
+
+-- ## Visualizando ERROS de compilação
+show error
+
+create or replace package listagem is
+	cursor c1 is
+	select
+		d.department_id,
+		department_name,
+		first_name,
+		hire_date,
+		salary
+	from 	departments d,
+		employees   e
+	where
+		d.manager_id = e.employee_id
+	order by department_name;
+
+	type tab is table of c1%rowtype index by binary_integer;
+	
+	tbgerente tab;
+	n number;
+	
+	procedure lista_gerente_por_depto;
+	;	-- provocando um erro de sintaxe.
+end listagem;
+/
+
+-- Advertência: Pacote criado com erros de compilação
+show error
+user_erros, all_erros ou dba_erros
+
+select
+	line,
+	position,
+	text
+from 	user_erros
+where
+	name = 'listagem'
+
+
+-- Exemplo de uma transação AUTONOMA
+declare
+	procedure lista_dept is
+	
+	pragma autonomous_transaction;
+	begin
+		dbms_output.new_line;
+		dbms_output.put_line('----------- Lista Departamentos -----------');
+		dbms_output.new_line;
+		for i in (select * from dept order by deptno) loop
+			dbms_output.put_line(i.deptno || ' - ' || i.dname);
+		end loop;
+		commit;
+	end;
+
+	begin
+		insert into dept (deptno, dname, loc) values (43, 'ORDER MANAGER', 'BRASIL');
+		lista_dept;
+		commit;
+		lista_dept;
+	end;
+
+
+-- Segundo Exemplo de transação autonoma
+create procedure lista_pais(num_lista number) is
+begin
+	dbms_output.put_line('Executando procedure: LISTA_PAIS');
+	dbms_output.new_line;
+	dbms_output.new_line('----------- Lista País - ' || num_lista || '-----------');
+	dbms_output.new_line;
+
+	for i in (select * from contries where region_id = 1 order by country_name) loop
+		dbms_output.put_line(i.country_id || ' - ' || i.country_name);
+	end loop;
+end;
+/
+
+create procedure insere_pais_portugal is
+	pragma autonomous_transaction;
+	begin
+		dbms_output.put_line('Executando procedure: INSERE_PAIS_PORTUGAL');
+		insert into countries (country_id, country_name, region_id) 10 values ('PT', 'Portugal', 1);
+		lista_pais(2);
+		commit;
+	end;
+	/
+
+create procedure chama_insere_pais_portugal is
+	begin
+		dbms_output.put_line('Executando procedure: CHAMA_INSERE_PAIS_PORTUGAL');
+		insere_pais_portual;
+	end;
+/
+
+create procedure insere_pais_espanha is
+	begin
+		dbms_output.put_line('Executando procedure: INSERE_PAIS_ESPANHA');
+		insert into countries (country_id, country_name, region_id) values ('ES', 'Espanha', 1);
+		lista_pais(1);
+		chama_insere_pais_portugal;
+		rollback;
+		lista_pais(3);
+	end;
+/
+
+begin
+	insere_pais_espanha;
+end;
+/
