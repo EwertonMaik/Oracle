@@ -2907,3 +2907,104 @@ begin
 	insere_pais_espanha;
 end;
 /
+
+			  create trigger tipo_tabela
+	before delete or insert or update of sal on emp
+begin
+end;
+
+
+create table tab_audit_emp (
+	nr_registros	  number,
+	vl_total_salario  number,
+ 	vl_total_comissao number
+);
+
+
+create trigger tig_audit_emp
+	after insert or delete or update of sal, comm on emp
+declare
+	wnr_registros		number default 0;
+	wvl_total_salario	number default 0;
+	wvl_total_comissao 	number default 0;
+	wnr_registros_audit 	number default 0;
+begin
+	select 	count(*)
+	into	wnr_registros
+	from 	emp;
+	
+	select	sum(sal)
+	into	wvl_total_salario
+	from 	emp;
+	
+	select 	sum(comm)
+	into 	wvl_total_comissao
+	from 	emp;
+	
+	select 	count(*)
+	into	wnr_registros_audit
+	from 	tab_audit_emp;
+	
+	if wnr_registros_audit = 0 then
+		insert into tab_audit_emp
+		(nr_registros, vl_total_salario, vl_total_comissao)
+		values (wnr_registros, wvl_total_salario, wvl_total_comissao);
+	else
+		update tab_audit_emp
+		set nr_registros	= wnr_registros,
+		    vl_total_salario	= wvl_total_salario,
+		    vl_total_comissao 	= wvl_total_comissao;
+	end if;
+end;
+/
+
+update emp
+set	sal = sal + (sal * 10 / 100)
+where 	deptno = 20;
+
+delete from emp where deptno = 10;
+
+insert into emp
+(empno, ename, job, mgr, hiredate, sal, comm, deptno)
+values
+(7935, 'PAULO', 'CLERK', 7902, to_date('17/09/2011','dd/mm/yyyy'), 1000, null, 20);
+
+
+-- ## TRIGGER DE LINHA
+
+create or replace trigger tipo_linha
+	after update on func
+	referencing old as V
+		    new as N
+	for each row
+begin
+
+end;
+/
+
+
+create table tab_hist_cargo_emp (
+	empno			number,
+	job_anterior 		varchar2(9),
+	job_atual 		varchar2(9),
+	dt_alteracao_cargo	date,
+	ds_historico		varchar2(2000)
+);
+
+create trigger tig_hist_cargo_emp
+	after update of job on emp
+	referencing old as v
+		    new as n
+	for each row
+begin
+	insert into tab_hist_cargo_emp
+	(empno, job_anterior, job_atual, dt_alteracao_cargo,, ds_historico)
+	values
+	(:n.empno, :v.job, :n.job, sysdate, 'O empregado ' || :n.ename || ' passou para o cargo ' || :n.job || ' em carater de promoção.');
+end;
+/
+
+update	emp
+set 	job = 'MANAGER'
+where	empno = 7499;
+
