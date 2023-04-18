@@ -3008,3 +3008,59 @@ update	emp
 set 	job = 'MANAGER'
 where	empno = 7499;
 
+alter table emp add pc_com_sal number;
+
+create trigger tig_pc_com_sal_emp
+	before insert or update of sal, comm on emp
+	referencing old as v
+		    new as n
+	for each row when (n.job = 'SALESMAN')
+begin
+	:n.pc_com_sal := nvl(:n.comm, 0) * 100 / :n.sal;
+end;
+/
+
+
+update emp set sal = sal;
+
+insert into emp (empno, ename, job, mgr, hiredate, sal, comm, deptno)
+values (7940,'PEDRO','CLERK',7788, to_date('05/09/2011','dd/mm/rrrr'),750,100,30);
+
+insert into emp (empno, ename, job, mgr, hiredate, sal, comm, deptno)
+values (7941,'JOAO','SALESMAN',7698,to_date('05/09/2011','dd/mm/rrrr'),1200,350,30);
+
+select empno, ename, job, sal, comm, pc_com_sal from emp;
+
+-- Utilizando os predicados INSERTING / UPDATING / DELETING
+
+create table tab_hist_dept (
+	deptno 		number,
+	dt_historico	date,
+	ds_historico	varchar2(2000)
+);
+
+
+create or replace trigger tig_hist_dep
+	after insert or delete or update on dept
+	for each row
+declare
+	wacao varchar2(200) default null;
+begin
+	if 	inserting 	then
+		wacao := 'inserido';
+	elsif 	updating 	then
+		wacao := 'atualizado';
+	elsif 	deleting 	then
+		wacao := 'excluído';
+	end if;
+	
+	insert into tab_hist_dept (deptno, dt_historico, ds_historico)
+	values (nvl(:new.deptno,:old.deptno), sysdate, ,'O departamento '|| nvl(:new.dname,:old.dname) || 'foi '||wacao||'.' );
+end;
+/
+
+update dept set dname = dname;
+insert into dept values (50,'TI','BRASIL');
+delete dept where deptno = 50;
+
+select * from tab_hist_dept;
