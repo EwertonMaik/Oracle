@@ -3064,3 +3064,128 @@ insert into dept values (50,'TI','BRASIL');
 delete dept where deptno = 50;
 
 select * from tab_hist_dept;
+
+
+create or replace trigger tig_hist_cargo_emp
+	after update of job on emp
+	referencing old as v new as n
+for each row
+begin
+	insert into tab_hist_cargo_emp (empno, job_anterior, job_atual, dt_alteracao_cargo, ds_historico)
+	values (:n.empno, :v.job, :n.job, sysdate, 'O empregado ' || :n.ename || 'passou para o cargo ' || :n.job || 'em carater de promoção.');
+end;
+/
+
+alter trigger tig_hist_cargo_emp compile;
+
+-- Desativando e Inativando uma Trigger
+alter trigger tig_hist_cargo_emp disable;
+alter trigger tig_hist_cargo_emp enable;
+
+-- Desativando todas as triggers de uma tabela
+alter table emp disable all triggers;
+alter table emp enable all triggers;
+
+drop trigger tig_hist-cargo_emp;
+
+-- Aplicando acesso
+grant create trigger to tsql;
+
+grant create any trigger to tsql;
+
+user_triggers, all_trigger ou dba_triggers
+
+select trigger_body from user_trigger where trigger_name = 'TIG_PC_COM_SAL_EMP';
+
+
+
+-- Trigger Mutante
+create or replace trigger tig_emp_pragma
+	after update on emp
+	for each row
+declare
+	wcont_registro number default 0;
+begin
+	select count(*) into wcont_registro from emp;
+	dbms_output.put_line('Quantidade de registros na tabela EMP: ' || wcont_registro);
+end;
+/
+
+-- Gerado ERRO ao executar o UPDATE devido a Trigger Mutante
+update emp set sal = sal;
+
+-- Reescrevendo a Trigger
+create or replace trigger tig_emp_pragma
+	after update on emp
+declare
+	wcont_registro number default 0;
+begin
+	select count(*) into wcont_registro from emp;
+	dbms_output.put_line('Quantidade de registros na tabela EMP: ' || wcont_registros);
+end;
+/
+
+update emp set sal = sal;
+
+
+create or replace trigger tig_emp_pragma
+	before update on emp
+	for each row
+declare
+	pragma autonomous_transaction;
+	wcont_registro number default 0;
+begin
+	select count(*) into wcount_registro from emp;
+	
+	if nvl(:old.comm, 0) < 300 then
+		:new.comm := :new.sal * 10 / 100;
+	end if;
+	
+	dbms_output.put_line('Quantidade de registros na tabela EMP: ' || wcont_registro);
+	commit;
+end;
+/
+
+update emp set sal = sal;
+
+
+create or replace trigger tig_emp_pragma
+	before update or insert on emp
+	for each row
+declare
+	pragma autonomous_transaction;
+	wcont_registro number default 0;
+begin
+	select count(*) into wcont_registro from emp;
+	
+	if nvl(:old.comm, 0) < 300 then
+		:new.comm := :new.sal * 10 / 100;
+	end if;
+	
+	dbms_output.put_line('Quantidade de registros na tabela EMP: ' || wcont_registro);
+	commit;
+end;
+/
+
+
+insert into emp (empno, ename, job, mgr, hiredate, sal, comm, deptno, pc_com_sal)
+values (7935, 'PAUL', 'SALESMAN', 7698, to_date('15-MAR-1980', 'dd-mon-rrrr'), 1000, 100, 30, null);
+
+-- Trigger de Sistema
+startup - quando o banco de dados é aberto
+shutdown - antes de o banco de dados iniciar o shutdown(fechamento). Se for shutdown abort este evento não é disparado.
+servererror - quando um erro ocorre.
+after logon - depois de uma conexão ser comtemplada no banco de dados.
+before logoff - quando o usuário desconecta do banco de dados.
+before create / after create - quando o objeto é criado no banco de dados, exceto do comando create database.
+befote alter / after alter - quando um objeto é alterado no banco de dados, com exceção do comando alter database.
+before drop / after drop - quando um objeto é eliminado do banco de dados.
+before analyze / after analyze - quando o comando analyze é executado. Este comando é utilizado
+para gerar estatísticas relacionadas ao desempenho de comandos SQL e processos do banco de dados.
+before commit / after commit - quando um commit é executado
+before ddl / after ddl - quando um comando ddl é executado, com execeção dos comandos alter database,
+create controlfile, create database e ddl executados a partit de interface PL/SQL.
+before grant / after grant - quando o comando grant é executado.
+before rename / after rename - quando o rename é executado.
+before revoke / after revoke - quando o comando revoke é executado.
+before truncate / after truncate - quando o truncate é executado.
