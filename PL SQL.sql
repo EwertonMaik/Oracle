@@ -3189,3 +3189,40 @@ before grant / after grant - quando o comando grant é executado.
 before rename / after rename - quando o rename é executado.
 before revoke / after revoke - quando o comando revoke é executado.
 before truncate / after truncate - quando o truncate é executado.
+
+			  create table hist_usuario (
+	nm_usuario	varchar2(50),
+	dt_historico	date,
+	ds_historico	varchar2(4000)
+);
+/
+
+create or replace trigger tgr_hist_conexao_usuario
+	after logon on database
+begin
+	insert into hist_usuario values
+	(ORA_LOGIN_USER, sysdate, 'Conexão com banco de dados' || ORA_DATABASE_NAME);
+end;
+/
+
+select * from hist_usuario;
+
+create or replace trigger tgr_hist_criatab_usuario
+	after create on database
+begin
+	insert into hist_usuario values
+	(ORA_LOGIN_USER, sysdate, 'O Objeto ' || ORA_DICT_OBJ_NAME || ' foi criado no banco de dados.');
+end;
+/
+
+
+create table teste_trigger (
+	id_campo	varchar2(),
+	nm_campo	date,
+	ds_campo	varchar2(4000)
+);
+/
+
+select * from hist_usuario;
+
+-- TRIGGER DE VIEW
