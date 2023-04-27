@@ -3226,3 +3226,64 @@ create table teste_trigger (
 select * from hist_usuario;
 
 -- TRIGGER DE VIEW
+
+create view emp_dept_v as
+select e.empno, e.ename, e.job, e.sal, d.dname
+from emp e, dept d
+where e.deptno = d.deptno
+
+select * from emp_dept_v;
+
+-- Criando TRIGGER com INSTEAD OF para manipulação de dados
+
+create or replace trigger trg_emp_dept_v
+instead of
+insert or delete or update
+on emp_dept_v
+referencing new as new old as old
+declare
+	cursor c1(pdeptno dept.deptno%type) is
+	select deptno, dname
+	from dept
+	where deptno = pdeptno;
+
+	cursor c2(pempno emp.empno%type) is
+	select empno, ename
+	from emp
+	where empno = pempno;
+	
+	wdeptno dept.deptno%type;
+	wdname	dept.dname%type;
+	wempno 	emp.empno%type;
+	wename 	emp.ename%type;
+
+begin
+	if inserting then
+		-- verifica se existe departamento.
+		open c1 (:new.deptno);
+		fetch c1 into wdeptno, wdname;
+		
+		if c1%notfound then
+			insert into dept (deptno, dname, loc) values (:new.deptno, :new.dname, null);
+			dbms_output.put_line('Departamento Cadastrado com Sucesso.');
+		else
+			dbms_output.put_line('Departamento Existente: ' || wdeptno || ' - ' || wdname || '.');
+		end if;
+		
+		-- Verifica se Existe Empregado
+		open c2(:new.empno);
+		fetch c2 into wempno, wename;
+		
+		if c2%notfound then
+			insert into emp (empno, ename, job, sal, mgr, deptno)
+			values (:new.empno, :new.ename, :new.job, :new.sal, :new.mgr, :new.deptno);
+			dbms_output.put_line('Funcionario cadastrado com Sucesso.');
+		else
+			dbms_output.put_line('Funcionario Existente: ' || wempno || ' - ' || wename || '.');
+		end if;
+	end if;
+end;
+/
+
+insert into emp_dept_v (empno, ename, job, sal, mgr, deptno, dname) values (8000, 'BRUCE', 'MANAGER', 1000, 7839, 20, 'RESEARCH');
+insert into emp_dept_v (empno, ename, job, sal, mgr, deptno, dname) values (8000, 'BRUCE', 'MANAGER', 1000, 7839, 20, 'RESEARCH');
