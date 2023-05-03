@@ -3369,3 +3369,124 @@ end;
 
 select * from emp_dept_v where empno = 8000;
 
+select * from emp_dept_v where empno = 8000;
+
+update emp_dept_v set ename = 'BRUCEW', job = 'ANALYST', sal = 1500, deptno = 20, dname = 'RESEARCH'
+where empno = 8000;
+
+select * from emp_dept_v where empno = 8000;
+select * from emp_dept_v where deptno = 20;
+
+update emp_dept_v set dname = 'PESQUISA' where deptno = 20;
+
+select * from emp_dept_v where deptno = 20;
+
+
+create or replace trigger trg_emp_dept_v
+insted of
+insert or delete or update
+or emp_dept_v
+referencing new as new old as old
+declare
+	cursor c1(pdeptno dept.deptno%type) is
+	select deptno, dname from dept where deptno = pdeptno;
+	
+	cursor c2(pempno emp.empno%type) is
+	select empno, ename from emp where empno = pempno;
+	
+	cursor c3(pdeptno dept.deptno%type) is
+	select count(*) from emp where deptno = pdeptno;
+	
+	wdeptno dept.deptno%type;
+	wdname	dept.dname%type;
+	wempno	emp.empno%type;
+	wename 	emp.ename%type;
+	qt_empno number default 0;
+begin
+	if inserting then
+		-- verifica se existe departamento.
+		open c1(:new.deptno);
+		fetch c1 into wdeptno, wdname;
+
+		if c1%notfound then
+			insert into dept (deptno, dname, loc) values (:new.deptno, :new.dname, null);
+			dbms_output.put_line('Departamento Cadastrado com Sucesso.');
+		else
+			dbms_output.put_line('Departamento existente: ' || wdeptno || ' - ' || wdname || '.');
+		end if;
+		
+		-- verifica se existe empregado
+		open c2(:new.empno);
+		fetch c2 into wempno, wename;
+		
+		if c2%notfound then
+			insert into emp (empno, ename, job, sal, mgr, deptno)
+			values ((:new.empno, :new.ename, :new.job, :new.sal, :new.mgr, :new.deptno);
+			dbms_output.put_line('Funcionário cadastrado com sucesso.');
+		else
+			dbms_output.put_line('Funcionário existente: ' || wempno || ' - ' || wename || '.');
+		end if;
+	
+	elsif updating then
+		-- verifica se existe departamento
+		open c1(:new.deptno);
+		fetch c1 into wdeptno, wdname;
+		
+		if c1%notfound then
+			dbms_output.put_line('Departamento não existe.');
+		else
+			update dept set dname = :new.dname where deptno = :new.deptno;
+			dbms_output.put_line('Departamento atualizado com sucesso: ' || :new.dname || '.');
+		end if;
+		
+		-- verifica se existe empregado
+		open c2(:new.empno);
+		fetch c2 into wempno, wename;
+		
+		if c2%notfound then
+			dbms_output.put_line('Funcionário não cadastrado.');
+		else
+			update emp set ename = :new.ename, job = :new.job, sal = :new.sal,
+			mgr = :new.deptno where empno = :new.empno;
+			dbms_output.put_line('Funcionário atualizado com sucesso: ' || :new.ename || '.');
+		end if;
+	
+	elsif deleting then
+		-- verifica se existe empregado.
+		open c2(:old.empno);
+		fetch c2 into wempno, wename;
+		
+		if c2%notfound then
+			dbms_output.put_line('Funcionário não cadastrado.');
+		else
+			delete from emp where empno = :old.empno;
+			dbms_output.put_line('Funcionário excluído com sucesso: ' || :old.ename || '.');
+		end if;
+
+		-- verifica se existe departamento
+		open c1(:old.deptno);
+		fetch c1 into wdeptno, wdname;
+		
+		if c1%notfound then
+			dbms_output.put_line('Departamento não existe.');
+		else
+			-- verifica se existe departamento
+			open c3(:old.deptno);
+			fetch c3 into qt_empno;
+			
+			if qt_empno = 0 then
+				delete from dept where deptno = :old.deptno;
+				dbms_output.put_line('departamento excluído com sucesso: ' || :old.dname || '.');
+			else
+				dbms_output.put_line('O departamento ' || :old.dname || 'não pode ser excluído.');
+			end if;
+		end if;				
+	end if;
+end;
+/
+
+
+select * from emp_dept_v;
+delete from emp_dept_v where empno = 8000;
+delete from emp_dept_v where deptno = 20;
+select * from emp_dept_v;
