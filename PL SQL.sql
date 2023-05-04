@@ -3490,3 +3490,61 @@ select * from emp_dept_v;
 delete from emp_dept_v where empno = 8000;
 delete from emp_dept_v where deptno = 20;
 select * from emp_dept_v;
+
+
+declare
+	type deptnotab is table of number index by binary_integer;
+	type dnametab  is table of deppt.dname%type index by binary_integer;
+	type loctab    is table of varchar2(200) index by binary_integer;
+
+	wdeptnotab	deptnotab;
+	wdnametab 	dnametab;
+	wloctab 	loctab;
+
+	idx	binary_integer default 0;
+begin
+	for r1 in(select deptno, dname, loc from dept) loop
+		idx := idx + 1;
+		wdeptnotab(idx) := r1.deptno;
+		wdnametab(idx)  := r1.dname;
+		wloctab(idx) 	:= r1.loc;
+	end loop;
+
+	for i in 1..wdeptnotab.last loop
+		dbms_output.put_line('Departamento: ' || wdeptnotab(i) || ' - ' || wdnametab(i) || ' - Local: ' || wloctab(i) );
+	end loop;
+end;
+/
+
+
+-- Segundo Exemplo
+declare
+	cursor c1 is select d.department_id, department_name, first_name,
+	hire_date, salary from departments d, employees e
+	where d.manager_id = e.employee_id
+	order by department_name;
+	
+	type tab is table of c1%rowtype index by binary_integer;
+	
+	tbgerente tab;
+	n number;
+	
+begin
+	for r1 in c1 loop
+		tbgerente(r1.department_id) :=  r1;
+	end loop;
+	
+	n := tbgerente.first;
+	
+	while n <= tbgerente.last loop
+		dbms_output.put_line(
+		'Depto: '||tbgerente(n).department_name||' '||
+		'Gerente: '||tbgerente(n).first_name||' '||
+		'Dt. Admi.: '||tbgerente(n).hire_date||' '||
+		'Sal.: '||to_char(tbgerente(n).salary, 'fm$999g999g990d00')
+		);
+		n := tbgerente.next(n);
+	end loop;
+end;
+/
+
