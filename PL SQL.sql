@@ -3548,3 +3548,40 @@ begin
 end;
 /
 
+-- Exemplo utilizando tabela (%rowtype)
+
+declare
+	type deptab is table of dept%rowtype index by binary_integer;
+	wdeptab deptab;
+	idx binary_integer default 0;
+begin
+	for r1 in (select * from dept) loop
+		idx := idx + 1;
+		wdeptab(idx) := r1;
+	end loop;
+	
+	for i in 1..wdeptab.last loop
+		dbms_output.put_line('Departamento: ' || wdeptab(i).deptno || ' - ' 
+		|| wdeptab(i).dname || ' - Local: ' || wdeptab(i).loc);
+	end loop;
+end;
+/
+
+-- PL/SQL Records (Estruturas Heterogêneas)
+
+declare
+	type deprec is record (
+		deptno number(2,0),
+		dname varchar2(14),
+		loc varchar2(13)
+	);
+	wdeprec deprec;
+begin
+	select	*
+	into	wdeprec
+	from	dept
+	where	deptno = 10;
+
+	dbms_output.put_line('Departamento: ' || wdeprec.deptno || ' - ' || wdeprec.dname || ' - Local: ' || wdeprec.loc);
+end;
+/
