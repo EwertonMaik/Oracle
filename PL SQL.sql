@@ -3585,3 +3585,128 @@ begin
 	dbms_output.put_line('Departamento: ' || wdeprec.deptno || ' - ' || wdeprec.dname || ' - Local: ' || wdeprec.loc);
 end;
 /
+
+
+declare
+	type deprec is record (	deptno number(2,0),
+				dname varchar2(14),
+				loc varchar2(13)
+			      );
+	type deptab is table of deprec index by binary_integer;
+	
+	wdeptab deptab;
+	idx	binary_integer default 0;
+begin
+	for r1 in (select * from dept) loop
+		idx := idx + 1;
+		wdeptab(idx) := r1;
+	end loop;
+	for i in 1..wdeptab.last loop
+		dbms_output.put_line('Departamento: ' || wdeptab(i).deptno || ' - ' || wdeptab(i).dname ||
+				     ' - Local: ' || wdeptab(i).loc );
+	end loop;
+end;
+/
+
+-- Pacote utl_file
+-- Este pacote trabalha com recursos que possibilita a comunicação entre o banco de dados Oracle e o sistema operacional, fazendo com que
+-- consigamos ler ou gerar arquivos externamente ao banco de dados
+
+select * from v$parameter;
+
+-- Criando um Objeto DIRECTORY
+
+create directory dir_principal as 'C:\tmp\arquivos';
+
+-- concedendo permissão de leitura e escrita
+grant read, write on directory dir_principal to TSQL;
+
+-- Consultar os objetos directory cadastrados
+select * from all_directories where directory_name = 'DIR_PRINCIPAL';
+
+--create or replace directory dir_principal as 'C:\tmp\';
+
+grant execute on UTL_FILE to TSQL;
+
+-- Funções e Procedimentos do uso UTL_FILE
+fclose - fecha o arquivo
+pricedure fclose(file in out file_type);
+
+fclose_all - fecha todos os arquivos
+procedure fclose_all;
+
+fflush - descarrega todos os dados em buffer par serem gravados em disco imediatamente.
+procedure fflush(file in file_type);
+
+fopen - abre o arquivo
+function fopen(location in varchar2, filename in varchar2, openmode in varchar2)
+return file_type;%%
+
+r - read / w - write / a - append
+location - nome do diretório
+filename - nome do arquivo
+max_linesize - tamanho máximo de linha
+function fopen(	location in varchar2,
+		filename in varchar2,
+		openmode in varchar2,
+		max_linesize in binary_integer)
+return file_type;
+
+file - nome do arquivo
+buffer - é o lugar onde o conteúdo lido da linha dever ser inserido.
+get_line - lê uma linha de um arquivo
+procedure get_line(file in file_type, buffer out varchar2);
+
+is_open - verifica se um arquivo está aberto
+procedure is_open(file in file_type) return boolean;
+
+new_line - grava um caractere newline em um arquivo.
+procedure new_line(file in file_type, lines in natural := 1);
+
+put - grava uma string de caracteres em um arquivo, mas não coloca uma newline depois dela.
+procedure put(file in file_type, buffer in varchar2);
+
+put_line - grava uma linha em um arquivo
+procedure put_line(file in file_type, buffer in varchar2);
+
+putf - formata e grava saída. Essa é uma imitação bruta do procedimento PRINTF();
+procedure putf(	file in file_type, format in varchar2,
+		arg1 in varchar2 default null,
+		arg2 in varchar2 default null,
+		arg3 in varchar2 default null,
+		arg4 in varchar2 default null,
+		arg5 in varchar2 default null);
+
+-- Exemplo
+declare
+	cursor c1 is
+	select a.deptno, dname, empno, ename from dept a, emp b
+	where a.deptno = b.deptno
+	order by a.deptno;
+	
+	r1 c1%rowtype;
+	
+	mu_arquivo utl_file.file_type;
+begin
+	meu_arquivo := utl_fine.fopen('DIR_PRINCIPAL', 'empregados.txt', 'w');
+	open c1;
+	
+	loop
+		fetch c1 into r1;
+		exit when c1%notfound;
+		utl_file.put_line(meu_arquivo, r1,deptno || ';' ||
+				  r1.dname || '; ' || r1.empno || ';' || r1.ename);
+	end loop;
+	close c1;
+	utl_file.fclose(meu_arquivo);
+	
+	exception
+		when utl_file.invalid_path then
+			utl_file.fclose(meu_arquivo);
+			dbms_output.put_line('caminho ou nome do arquivo inválido');
+		when utl_file.invalid_mode then
+			utl_file.fclose(meu_arquivo);
+			dbms_output.put_line('Modo de abertura inválido');
+
+end;
+/
