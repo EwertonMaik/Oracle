@@ -3710,3 +3710,54 @@ begin
 
 end;
 /
+
+-- Lendo um arquivo gerado e exibindo as informações em tela
+
+declare
+	meu_arquivo	utl_file.file_type;
+	linha		varchar2(32000);
+	
+	wdeptno		emp.deptno%type;
+	wdname		dept.dname%type;
+	wempno		emp.empno%type;
+	wename		emp.ename%type;
+begin
+	meu_arquivp := utl_file.fopen('DIR_PRINCIPAL', 'empregados.txt', 'r');
+	
+	loop
+		utl_file.get_line(meu_arquivo, linha);
+		exit when linha is null;
+		
+		wdeptno :=	rtrim( substr(linha, 1, (instr(linha, ';', 1, 1) -1) ) );
+		wdname	:=	rtrim( substr(linha, (instr(linha, ';',1, 1) + 1 )
+						   , (instr(linha, ';',1, 2) - 1 ) -
+						     (instr(linha, ';',1, 1) + (1 - 1) ) ) );
+		wempno 	:=	rtrim( substr(linha, (instr(linha, ';',1, 2) + 1)
+						   , (instr(linha, ';',1, 3) - 1) -
+						     (instr(linha, ';',1, 2) + (1 - 1) ) ) );
+		wename	:=	rtrim( rtrim(substr(linha, (instr(linha, ';', 1, 3) + 1 ) ), chr(13) ) );
+
+		dbms_output.put_line('Cód. Departamento: ' || wdeptno);
+		dbms_output.put_line('Nome Departamento: ' || wdname);
+		dbms_output.put_line('Cód. Empregado: 	 ' || wempno);
+		dbms_output.put_line('Nome Empregado: 	 ' || wename);
+		dbms_output.put_line('_');		
+	end loop;
+	
+	utl_file.fclose(meu_arquivo);
+	
+	exception
+		when no_data_found then
+			utl_file.fclose(meu_arquivo);
+			dbms_output.put_line('Final do Arquivo.');
+		when utl_file.invalid_path then
+			utl_file.fclose(meu_arquivo);
+			dbms_output.put_line('Caminho ou nome do arquivo inválido');
+		when utl_file.invalid_mode then
+			utl_file.fclose(meu_arquivo);
+			dbms_output.put_line('Modo de abertura inválido');
+end;
+/
+
+
+-- Geração de arquivos com layouts de números fixos para o tamanho das colunas.
