@@ -3838,3 +3838,116 @@ begin
 			dbms_output.put_line ('Modo de abertura inválido');
 end;
 /
+
+-- Exemplo com INSERT - Execute immediate
+declare
+	winsert_emp 	varchar2(4000) default null;
+	winsert_dept	varchar2(4000) default null;
+	
+	wempno		emp.empno%type;
+	wename 		emp.ename%type;
+	wjob		emp.job%type;
+	wmgr 		emp.mgr%type;
+	whiredate 	emp.hiredate%type;
+	wsal 		emp.sal%type;
+	wcomm		emp.comm%type;
+	wdeptno 	emp.deptno%type;
+begin
+	wempno		:= 9999;
+	wename		:= 'BONO';
+	wjob 		:= 'SALESMAN';
+	wmgr		:= 7698;
+	whiredate 	:= 1000;
+	wcomm		:= 0;
+	wdeptno 	:= 30;
+	
+	winsert_emp	:= 'insert into emp (empno, ename, job, mgr, hiredate, sal, comm, deptno)
+			    values (:empno, :ename, :job, :mgr, :hiredate, :sal, :comm, :deptno)';
+	
+	execute immediate winsert_emp using wempno, wename, wjob, wmgr, whiredate, wsal, wcomm, wdeptno;
+	
+	winsert_dept	:= 'insert into dept values (:deptno, :dname, :loc)';
+	
+	execute immediate winsert_dept using 99, 'RH', 'BRASIL';
+end;
+/
+
+-- Exemplo DELETE e UPDATE
+declare
+begin
+	execute immediate 'delete from emp where empno = :empno ' using 9999;
+	execute immediate 'update dept set loc = :loc where deptno = :deptno' using 'AUSTRALIA', 99;
+end;
+/
+
+
+-- Exemplos CREATE / ALTER - EXECUTE IMMEDIATE
+declare
+begin
+	execute immediate 'create tabela func (cd_func number, nm_func varchar2(50) )';
+	execute immediate 'alter table func modify cd_func number not null';
+end;
+/
+
+declare
+	watualiza_dept	varchar2(2000);
+	
+	wdname	dept.dname%type;
+	wloc_re	dept.loc%type;
+	
+	wloc	dept.loc%type default 'CHILE';
+	wdeptno	dept.deptno%type default 99;
+begin
+	watualiza_dept := 'update dept set loc = :1 where deptno ; :2 returning dname, loc into :3, :4';
+	execute immediate watualiza_dept using wloc, wdeptno, out wdname, out wloc_re;
+	dbms_output.put_line('Localização atualizada para o departamento ' || wdname || ' (Loc: ' || wloc || ').' );
+end;
+/
+
+
+declare
+	watualiza_dept	varchar2(2000);
+	
+	wdname		dept.dname%type;
+	wloc_re		dept.loc%type;
+	
+	wloc 		dept.loc%type	default 'ARGENTINA';
+	wdeptno 	dept.deptno%type default 99;
+begin
+	watualiza_dept 	:= 'update dept set loc = :1 where deptno ; :2 returning dname, loc into :3, :4';
+	execute immediate watualiza_dept using wloc, wdeptno returning into wdname, wloc_re;
+	dbms_output_line('Localização atualizada para o departamento ' || wdname || ' (Loc: ' || wloc || ').' );
+end;
+/
+
+-- Exemplo com FUNÇÂO
+create function rows_deleted (table_name in varchar2, condition in varchar2)
+return integer as
+begin
+	execute immediate 'delete from ' || table_name || ' where ' ||condition;
+	return sql%rowcount;
+end;
+/
+--cursor implícito sql%rowcount para retornar a quantidade de linhas excluídas.
+
+declare
+	wnr_linhas number;
+begin
+	wnr_linhas := rows_deleted('EMP', 'empno = 7935');
+	dbms_output.put_line('Linhas Excluídas: ' || wnr_linhas);
+end;
+/
+
+
+-- Exemplo com PROCEDURE
+create or replace procedure cria_dept (
+pdeptno in number, pdname in varchar2, ploc in varchar2, pstatus in out varchar2) is
+begin
+	insert into dept values (pdeptno, pdname, ploc);
+	pstauts := 'OK';
+	commit;
+	exception
+		when others then
+			pstatus := sqlerrm;
+end;
+/
