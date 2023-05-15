@@ -3951,3 +3951,42 @@ begin
 			pstatus := sqlerrm;
 end;
 /
+
+declare
+	winsere_dept	varchar2(2000);
+	
+	wdname	dept.dname%type default 'RH';
+	wloc 	dept.loc%type default 'ARGENTINA';
+	wdeptno	dept.deptno%type default 88;
+	
+	wstatus varchar2(4000);
+begin
+	winsere_dept := 'begin cria_dept(:a, :b, :c, :d); end; ';
+	
+	execute immediate winsere_dept using in wdeptno, in wdname, in wloc, in out wstatus;
+	
+	if wstatus = 'OK' then
+		dbms_output.put_line('Departamento inserido com sucesso.');
+	else
+		dbms_output.put_line('Erro ao inserir departamento. Erro: ' || wstatus);
+	end if;
+end;
+
+
+-- Cursores do Tipo - ref cursor
+declare
+	type empcurtyp is ref cursor;
+	emp_cv	empcurtyp;
+	
+	my_ename	varchar2(15);
+	my_sal 		number default 1000;
+begin
+	open emp_cv for
+		'select ename, sal from emp where sal > :s' using my_sal;
+	loop
+		fetch emp_cv into my_ename, my_sal;
+		exit when emp_cv%notfound;
+		dbms_output.put_line('Empregado: ' || my_ename || ' Salário: ' || my_sal);
+	end loop;
+end;
+/
