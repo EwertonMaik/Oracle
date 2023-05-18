@@ -3990,3 +3990,87 @@ begin
 	end loop;
 end;
 /
+
+declare
+	type empcurtyp is ref cursor;
+	emp_cv empcurtyp;
+	emp_rec	emp%rowtype;
+	
+	sql_stmt varchar2(200);
+	my_job	varchar2(15) := 'CLERK';
+begin
+	sql_stmt := 'select * from emp where job = :j';
+	
+	open emp_cv for sql_stmt using my_job;
+	loop
+		fetch emp_cv into emp_rec;
+		exit when emp_cv%notfound;
+		dbms_output.put_line('Empregado: ' || emp_rec.ename || 'Salário: ' || emp_rec.sal);
+	end loop;
+	close emp_cv;
+end;
+/
+
+
+create procedure print_table (tab_name varchar2) is
+	type refcurtyp is ref cursor;
+	cv refcurtyp;
+	wdname dept.dname%type;
+	wloc dept.loc%type;
+begin
+	open cv for 'select dname, loc from ' || tab_name;
+	loop
+		fetch cv into wdname, wloc;
+		exit when cv%motfound;
+		dbms_output.put_line('Departamento: ' || wdname || 'Localização: ' || wloc);
+	end loop;
+	close cv;
+end;
+
+
+begin print_table (tab_name => 'DEPT'); end;
+
+
+declare
+	type empcurtyp is ref cursor;
+	type numlist is table of number;
+	type namelist is table of varchar2(15);
+	
+	emp_cv empcurtyp;
+	empnos numlist;
+	enames namelist;
+	
+	sals numlist;
+begin
+	open emp_cv for 'select empno, ename from emp';
+	fetch emp_cv bulk collect into empnos, enames;
+	close emp_cv;
+	
+	for r in 1..empnos.count loop
+		dbms_output.put_line('Cód.: ' || empnos(r) || ' - Empregado: ' || ename(r) );
+	end loop;
+	
+	execute immediate 'select sal from emp' bulk collect into sals;
+	
+	for r in 1.sals.count loop
+		dbms_output.put_line('Salário: ' || sals(r) );
+	end loop;
+end;
+/
+
+create function row_count(tab_name varchar2) return integer as
+row integer;
+begin
+	execute immediate 'select count(*) from ' || tab_name into rows;
+	return rows;
+end;
+/
+
+select row_count('EMP') from dual;
+
+select table_name from user_tables;
+select comments from user_tab_comments where table_name = 'EMPLOYEES';
+desc employees;
+desc departments;
+select * from user_constrains;
+select * from user_cons_columns;
