@@ -4074,3 +4074,25 @@ desc employees;
 desc departments;
 select * from user_constrains;
 select * from user_cons_columns;
+
+select
+		cons.table_name ||
+		'.' || cons_col.column_name ||
+		' faz ligação com ' ||
+		cons_depend.table_name || '.' ||
+		cons_col_depend.column_name || ' ' ||
+		"Dependências"
+from 		-- tabela pesquisa
+		user_constraints cons
+		,user_cons_columns cons_col
+		-- tabela dependencia
+		,user_constraints cons_depend
+		,user_cons_columns cons_col_depend
+where 		cons.constraint_name = cons_col.constraint_name
+and 		cons.table_name = cons_col.table_name
+and 		cons.table_name = 'EMPLOYEES' -- tabela para pesquisa
+and 		cons.constraint_type = 'R' -- Foreign key (ligação entre as tabelas)
+and 		cons_depend.constraint_name = cons_col_depend.constraint_name
+and 		cons_depend.table_name = cons_col_depend.table_name
+and 		cons_depend.constraint_name = cons.r_constraint_name
+order 		by 1
