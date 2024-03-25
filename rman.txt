@@ -76,3 +76,26 @@ backup datafile 16;
 select * from v$controlfile;
 
 backup current controlfile;
+
+
+-- ATUALIZAÇÃO DE ESTATISTICAS
+begin
+    dbms_stats.gather_database_stats;
+end;
+/
+
+BEGIN
+   FOR A IN ( SELECT owner FROM SYS.all_tables ) LOOP
+      execute immediate
+        EXEC dbms_stats.gather_schema_stats( 'A.owner', cascade='TRUE');
+   END LOOP;
+END;
+
+
+-- ATUALIZAÇÃO DE INDEX
+BEGIN
+  FOR x IN ( SELECT index_name FROM dba_indexes where table_owner = 'TABLESPACE' and index_type <> 'LOB' )
+  LOOP
+    EXECUTE IMMEDIATE 'alter index tablespace.'|| x.index_name ||' REBUILD';
+  END LOOP;
+END;
